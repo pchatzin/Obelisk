@@ -1,3 +1,5 @@
+package budget_db;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
