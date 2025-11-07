@@ -1,5 +1,5 @@
 BudgetCategorization.class
-BudgetEntryRepository.class
-BudgetImporter.class
-PdfBudgetParser.class
-BudgetEntry.class
+budget_db/BudgetEntryRepository.class
+budget_db/BudgetEntry.class
+budget_db/BudgetImporter.class
+budget_db/PdfBudgetParser.class
