@@ -1,1 +1,5 @@
 BudgetCategorization.class
+BudgetEntryRepository.class
+BudgetImporter.class
+PdfBudgetParser.class
+BudgetEntry.class
