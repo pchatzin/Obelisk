@@ -18,7 +18,7 @@ public class PdfBudgetParser {
     private static final String MINISTRY_NAME =
             "Υπουργείο Εθνικής Οικονομίας και Οικονομικών";
 
-    // Regex: [προαιρετικός κωδικός] [περιγραφή] [ποσό]
+    // Regex: [optional code] [description] [amount]
     private static final Pattern LINE_PATTERN = Pattern.compile(
             "^(\\d{4,}\\s+)?(.+?)\\s+(\\d[\\d\\.]+)$"
     );
@@ -28,21 +28,18 @@ public class PdfBudgetParser {
 
         try (PDDocument document = PDDocument.load(pdfFile)) {
             PDFTextStripper stripper = new PDFTextStripper();
+            stripper.setStartPage(4); // ✅ Start from page 4
             String text = stripper.getText(document);
 
             String[] lines = text.split("\\R");
 
-            String currentType = null; // "Εσοδα" ή "Εξοδα"
+            String currentType = null;
             int lineNumber = 0;
 
             for (String rawLine : lines) {
                 String line = rawLine.trim();
+                if (line.isEmpty()) continue;
 
-                if (line.isEmpty()) {
-                    continue;
-                }
-
-                // Ανάλογα με τις επικεφαλίδες στο PDF
                 if (line.contains("ΕΣΟΔΑ")) {
                     currentType = "Έσοδα";
                     continue;
@@ -51,30 +48,27 @@ public class PdfBudgetParser {
                     continue;
                 }
 
-                // Αν δεν έχει ακόμα οριστεί τύπος, προχώρα
-                if (currentType == null) {
-                    continue;
-                }
+                if (currentType == null) continue;
 
                 Matcher matcher = LINE_PATTERN.matcher(line);
-                if (!matcher.matches()) {
-                    // Γραμμή που δεν μοιάζει με [κωδικός] [περιγραφή] [ποσό], την αγνοούμε
-                    continue;
-                }
+                if (!matcher.matches()) continue;
 
+                String code = matcher.group(1) != null ? matcher.group(1).trim() : "";
                 String description = matcher.group(2).trim();
                 String amountStr = matcher.group(3).trim();
-
                 BigDecimal amount = parseAmount(amountStr);
 
                 lineNumber++;
+
+                // ✅ Combine code + description into source
+                String source = (code + " " + description).trim();
 
                 BudgetEntry entry = new BudgetEntry(
                         lineNumber,
                         currentType,
                         amount,
                         MINISTRY_NAME,
-                        description
+                        source
                 );
 
                 entries.add(entry);
@@ -84,9 +78,6 @@ public class PdfBudgetParser {
         return entries;
     }
 
-    /**
-     * Μετατρέπει 3.000.000 σε BigDecimal("3000000")
-     */
     private BigDecimal parseAmount(String amountStr) {
         String normalized = amountStr.replace(".", "").replace(",", ".");
         return new BigDecimal(normalized);
