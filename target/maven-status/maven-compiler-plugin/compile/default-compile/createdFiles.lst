@@ -1,0 +1,5 @@
+com/obelisk/budget_db/BudgetEntry.class
+com/obelisk/budget_db/PdfBudgetParser.class
+com/obelisk/budget_db/BudgetImporter.class
+com/obelisk/ObeliskApplication.class
+com/obelisk/budget_db/BudgetEntryRepository.class
