@@ -1,6 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.obelisk</groupId>
@@ -10,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.5.7</version>
         <relativePath/>
     </parent>
 
@@ -19,69 +20,56 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Boot Core -->
+
+        <!-- Spring Boot core -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Web (optional; keep if you need controllers) -->
+        <!-- Web (αν δεν το θες, αφαίρεσέ το) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Spring Data JPA without bundled H2 -->
+        <!-- JPA για BudgetEntry + Repository -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.h2database</groupId>
-                    <artifactId>h2</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
-        <!-- Force H2 1.4.200 at runtime -->
+        <!-- H2 runtime (Spring Boot παρέχει σωστή έκδοση) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.200</version>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Jakarta Servlet API required by Spring Boot 3 -->
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- PDFBox (kept) -->
+        <!-- PDFBOX for parsing PDF -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.29</version>
+            <version>2.0.35</version>
         </dependency>
 
-        <!-- Tests -->
+        <!-- Spring Boot testing (JUnit 5) -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.9.3</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Spring Boot Maven Plugin -->
+            <!-- Spring Boot Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
+
 </project>
