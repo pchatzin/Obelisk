@@ -74,24 +74,31 @@ public class BudgetImporter implements CommandLineRunner {
         System.out.println(">>> Τελικό CSV δημιουργήθηκε: " + csvPath);
     }
 
-    private void writeToCsv(List<BudgetEntry> entries, String csvPath) throws IOException {
-        Path path = Path.of(csvPath);
-        Files.createDirectories(path.getParent());
+   private void writeToCsv(List<BudgetEntry> entries, String csvPath) throws IOException {
+    Path path = Path.of(csvPath);
+    Files.createDirectories(path.getParent());
 
-        try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-            writer.write("# line,type,amount,ministry,source");
+    try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+        writer.write("# line,type,amount,ministry,source");
+        writer.newLine();
+
+        for (BudgetEntry e : entries) {
+
+            // ✅ 4η στήλη: είτε "-" είτε το υπουργείο
+            String ministry = e.getMinistry();
+            if (ministry == null || ministry.isBlank()) {
+                ministry = "-";
+            }
+
+            String line = String.join(",",
+                    safe(e.getLineNumber()),
+                    safe(e.getType()),
+                    safeAmount(e.getAmount()),
+                    escape(ministry),       // εδώ πλέον βάζουμε ministry ή "-"
+                    escape(e.getSource())
+            );
+            writer.write(line);
             writer.newLine();
-
-            for (BudgetEntry e : entries) {
-                String line = String.join(",",
-                        safe(e.getLineNumber()),
-                        safe(e.getType()),
-                        safeAmount(e.getAmount()),
-                        escape(e.getMinistry()),
-                        escape(e.getSource())
-                );
-                writer.write(line);
-                writer.newLine();
             }
         }
     }
