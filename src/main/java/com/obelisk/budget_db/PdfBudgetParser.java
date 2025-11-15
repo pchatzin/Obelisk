@@ -52,18 +52,47 @@ public class PdfBudgetParser {
             stripper.setStartPage(page);
             stripper.setEndPage(page);
 
-            String pageText = stripper.getText(document);
-            String[] lines = pageText.split("\\R");
+           String pageText = stripper.getText(document);
+String[] lines = pageText.split("\\R");
 
-            //  Επικεφαλίδα σελίδας = η πρώτη μη κενή γραμμή
-            String pageHeader = "-";
-            for (String rawLine : lines) {
-                String headerCandidate = rawLine.trim();
-                if (!headerCandidate.isEmpty()) {
-                    pageHeader = headerCandidate;
-                    break;
-                }
-            }
+// Επικεφαλίδα σελίδας = τίτλος Υπουργείου / Φορέα
+// Παίρνουμε την πρώτη μη κενή γραμμή και τυχόν συνέχεια του τίτλου.
+// Σταματάμε ΜΟΛΙΣ αρχίσουν τίτλοι τύπου "ΤΑΚΤΙΚΟΣ ΠΡΟΫΠΟΛΟΓΙΣΜΟΣ",
+// "ΠΙΣΤΩΣΕΙΣ ΚΑΤΑ ΕΙΔΙΚΟ ΦΟΡΕΑ", "ΣΥΓΧΡΗΜΑΤΟΔΟΤΟΥΜΕΝΟ ΣΚΕΛΟΣ" κτλ.
+StringBuilder headerBuilder = new StringBuilder();
+boolean startedHeader = false;
+
+for (String rawLine : lines) {
+    String t = rawLine.trim();
+    if (t.isEmpty()) {
+        continue;
+    }
+
+    String upper = t.toUpperCase();
+
+    if (!startedHeader) {
+        // Πρώτη μη κενή γραμμή = αρχή τίτλου υπουργείου
+        headerBuilder.append(t);
+        startedHeader = true;
+        continue;
+    }
+
+    // Από εδώ και κάτω: αν η γραμμή είναι τίτλος πίνακα / έτους / σκέλους, σταματάμε.
+    if (t.matches(".*\\d.*")
+            || upper.contains("ΠΙΣΤΩΣΕΙΣ")
+            || upper.contains("ΟΙΚΟΝΟΜΙΚΟ ΕΤΟΣ")
+            || upper.contains("ΚΩΔΙΚΟΣ ΦΟΡΕΑ")
+            || upper.contains("ΤΑΚΤΙΚΟΣ ΠΡΟΫΠΟΛΟΓΙΣΜΟΣ")
+            || upper.contains("ΣΥΓΧΡΗΜΑΤΟΔΟΤΟΥΜΕΝΟ ΣΚΕΛΟΣ")
+            || upper.contains("ΕΘΝΙΚΟ ΣΚΕΛΟΣ")) {
+        break;
+    }
+
+    // Διαφορετικά, είναι συνέχεια του ίδιου τίτλου (ίδιο "μέγεθος" στο PDF)
+    headerBuilder.append(" ").append(t);
+}
+
+String pageHeader = headerBuilder.length() == 0 ? "-" : headerBuilder.toString();
 
             //  Αν η επικεφαλίδα είναι "ΕΣΟΔΑ" ή "ΕΞΟΔΑ", για τη 4η στήλη θέλουμε "-"
             String headerForColumn4;
