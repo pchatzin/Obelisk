@@ -8,6 +8,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ *  Διαβάζει το budget2025.csv και:
+ *
+ *  1) Φτιάχνει πίνακα τύπου Άρθρο 1 (έσοδα):
+ *     - Βρίσκει όλους τους κωδικούς 2 ψηφίων (π.χ. 11, 12, 13…)
+ *     - Κρατάει μόνο την πρώτη εμφάνιση κάθε 2-ψηφίου κωδικού
+ *     - Υπολογίζει το σύνολο εσόδων από αυτούς τους κωδικούς
+ *
+ *  2) Φτιάχνει πίνακα τύπου Άρθρο 2 (έξοδα ανά Υπουργείο):
+ *     - Ομαδοποιεί τις γραμμές "Έξοδα" ανά Υπουργείο (στήλη ministry)
+ *     - Υπολογίζει το γενικό σύνολο εξόδων κρατικού προϋπολογισμού
+ *
+ *  3) Διαδραστικό μενού για επιπλέον αναλύσεις:
+ *     - Επιλογή 1: Ανάλυση εσόδων / εξόδων
+ *       (πίνακας με στήλες amount, ministry, source)
+ *     - Επιλογή 2: Ανάλυση ανά Υπουργείο
+ *       (πίνακας με στήλες type, amount, source)
+ */
 public class BudgetAnalyzer {
 
     // Μοντέλο μιας γραμμής του CSV
@@ -38,14 +56,14 @@ public class BudgetAnalyzer {
 
             // ΠΙΝΑΚΑΣ ΑΡΘΡΟ 1 – μόνο έσοδα
             System.out.println("==================================================");
-            System.out.println("ΠΙΝΑΚΑΣ 1 - ΕΣΟΔΑ");
+            System.out.println("ΠΙΝΑΚΑΣ ΑΡΘΡΟ 1");
             System.out.println("==================================================");
             long totalRevenue = generateArticle1(entries);
 
             // ΠΙΝΑΚΑΣ ΑΡΘΡΟ 2 – έξοδα ανά Υπουργείο
             System.out.println();
             System.out.println("==================================================");
-            System.out.println("ΠΙΝΑΚΑΣ 2 - ΕΞΟΔΑ ΑΝΑ ΥΠΟΥΡΓΕΙΟ");
+            System.out.println("ΠΙΝΑΚΑΣ ΑΡΘΡΟ 2");
             System.out.println("==================================================");
             long totalExpenses = generateArticle2(entries);
 
@@ -63,6 +81,10 @@ public class BudgetAnalyzer {
             System.out.println();
             System.out.printf("Αποτέλεσμα (έσοδα - έξοδα): %d%n", result);
             System.out.println("Ο κρατικός προϋπολογισμός είναι: " + status);
+            System.out.println();
+
+            // === 2ο ΜΕΡΟΣ: ΔΙΑΔΡΑΣΤΙΚΟ ΜΕΝΟΥ ===
+            runInteractiveMenu(entries);
 
         } catch (IOException e) {
             System.err.println("Σφάλμα κατά την ανάγνωση του αρχείου: " + e.getMessage());
@@ -232,5 +254,168 @@ public class BudgetAnalyzer {
                 "Γενικό σύνολο εξόδων κρατικού προϋπολογισμού", totalExpenses);
 
         return totalExpenses;
+    }
+
+    // ============================================================
+    // 2ο ΜΕΡΟΣ: ΔΙΑΔΡΑΣΤΙΚΟ ΜΕΝΟΥ
+    // ============================================================
+
+    private static void runInteractiveMenu(List<Entry> entries) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("==================================================");
+        System.out.println("Για περισσότερες πληροφορίες επιλέξτε μία από τις παρακάτω επιλογές:");
+        System.out.println("  1 : Ανάλυση εσόδων / εξόδων");
+        System.out.println("  2 : Ανάλυση ανά Υπουργείο");
+        System.out.println("==================================================");
+
+        int choice = 0;
+        while (true) {
+            System.out.print("Πληκτρολογήστε 1 ή 2 και πατήστε Enter: ");
+            String line = scanner.nextLine().trim();
+            if (line.equals("1") || line.equals("2")) {
+                choice = Integer.parseInt(line);
+                break;
+            } else {
+                System.out.println("Μη έγκυρη επιλογή. Παρακαλώ δοκιμάστε ξανά.");
+            }
+        }
+
+        if (choice == 1) {
+            analyzeByType(entries, scanner);
+        } else {
+            analyzeByMinistry(entries, scanner);
+        }
+
+        System.out.println("Τέλος αναφοράς. Ευχαριστούμε που χρησιμοποιήσατε το BudgetAnalyzer.");
+    }
+
+    /**
+     * Επιλογή 1: Ανάλυση εσόδων / εξόδων.
+     * Ζητάει από τον χρήστη "ΕΣΟΔΑ" ή "ΕΞΟΔΑ" και εμφανίζει πίνακα:
+     * amount, ministry, source.
+     */
+    private static void analyzeByType(List<Entry> entries, Scanner scanner) {
+        System.out.println();
+        System.out.println("ΕΠΙΛΟΓΗ 1: Ανάλυση εσόδων / εξόδων");
+        System.out.println("Μπορείτε να δείτε αναλυτικά όλες τις εγγραφές εσόδων ή εξόδων.");
+        System.out.println();
+
+        String userChoice;
+        String expectedType;
+
+        while (true) {
+            System.out.print("Πληκτρολογήστε \"ΕΣΟΔΑ\" ή \"ΕΞΟΔΑ\" και πατήστε Enter: ");
+            userChoice = scanner.nextLine().trim().toUpperCase(Locale.ROOT);
+
+            if (userChoice.equals("ΕΣΟΔΑ")) {
+                expectedType = "Έσοδα";
+                break;
+            } else if (userChoice.equals("ΕΞΟΔΑ")) {
+                expectedType = "Έξοδα";
+                break;
+            } else {
+                System.out.println("Μη έγκυρη τιμή. Γράψτε ακριβώς ΕΣΟΔΑ ή ΕΞΟΔΑ.");
+            }
+        }
+
+        List<Entry> result = new ArrayList<>();
+        for (Entry e : entries) {
+            if (expectedType.equals(e.type)) {
+                result.add(e);
+            }
+        }
+
+        if (result.isEmpty()) {
+            System.out.println("Δεν βρέθηκαν εγγραφές για τον τύπο: " + expectedType);
+            return;
+        }
+
+        System.out.println();
+        System.out.println("Ανάλυση για: " + expectedType);
+        System.out.printf("%-20s %-60s %-60s%n", "ΠΟΣΟ (€)", "ΥΠΟΥΡΓΕΙΟ / ΦΟΡΕΑΣ", "ΠΗΓΗ");
+        System.out.println("------------------------------------------------------------------------------------------------------------------------");
+
+        long sum = 0L;
+        for (Entry e : result) {
+            String ministry = (e.ministry == null || e.ministry.isEmpty()) ? "-" : e.ministry;
+            System.out.printf("%-20d %-60s %-60s%n", e.amount, ministry, e.source);
+            sum += e.amount;
+        }
+
+        System.out.println("------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-20s %-60s %-60d%n", "ΣΥΝΟΛΟ", "", sum);
+    }
+
+    /**
+     * Επιλογή 2: Ανάλυση ανά Υπουργείο.
+     * Ζητάει από τον χρήστη το Υπουργείο (σε κεφαλαία) και εμφανίζει πίνακα:
+     * type, amount, source.
+     */
+    private static void analyzeByMinistry(List<Entry> entries, Scanner scanner) {
+        System.out.println();
+        System.out.println("ΕΠΙΛΟΓΗ 2: Ανάλυση ανά Υπουργείο");
+        System.out.println("Θα εμφανιστούν όλες οι εγγραφές για το Υπουργείο που θα δώσετε.");
+        System.out.println("Γράψτε το Υπουργείο όπως εμφανίζεται στον πίνακα (με κεφαλαία).");
+        System.out.println();
+
+        // Σύνολο μοναδικών υπουργείων (για έλεγχο)
+        Set<String> ministries = new HashSet<>();
+        for (Entry e : entries) {
+            if (e.ministry != null && !e.ministry.isEmpty() && !" -".equals(e.ministry.trim())) {
+                ministries.add(e.ministry);
+            }
+        }
+
+        String selectedMinistry;
+        List<Entry> result;
+
+        while (true) {
+            System.out.print("Πληκτρολογήστε το Υπουργείο σε ΚΕΦΑΛΑΙΑ και πατήστε Enter: ");
+            String input = scanner.nextLine().trim();
+
+            // Βρίσκουμε υπουργείο με case-insensitive σύγκριση
+            selectedMinistry = null;
+            for (String m : ministries) {
+                if (m.equalsIgnoreCase(input)) {
+                    selectedMinistry = m;
+                    break;
+                }
+            }
+
+            if (selectedMinistry == null) {
+                System.out.println("Δεν βρέθηκε Υπουργείο με αυτή την ονομασία.");
+                System.out.println("Παρακαλώ ελέγξτε την ορθογραφία και δοκιμάστε ξανά.");
+                continue;
+            }
+
+            // Φιλτράρουμε τις εγγραφές για το συγκεκριμένο υπουργείο
+            result = new ArrayList<>();
+            for (Entry e : entries) {
+                if (selectedMinistry.equals(e.ministry)) {
+                    result.add(e);
+                }
+            }
+
+            if (result.isEmpty()) {
+                System.out.println("Δεν βρέθηκαν εγγραφές για αυτό το Υπουργείο. Δοκιμάστε ξανά.");
+            } else {
+                break;
+            }
+        }
+
+        System.out.println();
+        System.out.println("Ανάλυση για ΥΠΟΥΡΓΕΙΟ: " + selectedMinistry);
+        System.out.printf("%-10s %-20s %-60s%n", "ΤΥΠΟΣ", "ΠΟΣΟ (€)", "ΠΗΓΗ");
+        System.out.println("-----------------------------------------------------------------------------------------------");
+
+        long sum = 0L;
+        for (Entry e : result) {
+            System.out.printf("%-10s %-20d %-60s%n", e.type, e.amount, e.source);
+            sum += e.amount;
+        }
+
+        System.out.println("-----------------------------------------------------------------------------------------------");
+        System.out.printf("%-10s %-20d %-60s%n", "ΣΥΝΟΛΟ", sum, "");
     }
 }
