@@ -56,14 +56,14 @@ public class BudgetAnalyzer {
 
             // ΠΙΝΑΚΑΣ ΑΡΘΡΟ 1 – μόνο έσοδα
             System.out.println("==================================================");
-            System.out.println("ΠΙΝΑΚΑΣ ΑΡΘΡΟ 1");
+            System.out.println("ΠΙΝΑΚΑΣ 1 - ΕΣΟΔΑ");
             System.out.println("==================================================");
             long totalRevenue = generateArticle1(entries);
 
             // ΠΙΝΑΚΑΣ ΑΡΘΡΟ 2 – έξοδα ανά Υπουργείο
             System.out.println();
             System.out.println("==================================================");
-            System.out.println("ΠΙΝΑΚΑΣ ΑΡΘΡΟ 2");
+            System.out.println("ΠΙΝΑΚΑΣ 2 - ΕΞΟΔΑ ΑΝΑ ΥΠΟΥΡΓΕΙΟ");
             System.out.println("==================================================");
             long totalExpenses = generateArticle2(entries);
 
@@ -212,11 +212,11 @@ public class BudgetAnalyzer {
         }
 
         System.out.printf("%-5s %-70s %20s%n", "ΚΩΔ", "ΠΕΡΙΓΡΑΦΗ", "ΠΟΣΟ (€)");
-        System.out.println("---------------------------------------------------------------------------------------------");
+        System.out.println("-------------------------------------------------------------------------------------------------");
         for (Category c : categories.values()) {
             System.out.printf("%-5s %-70s %20d%n", c.code, c.label, c.amount);
         }
-        System.out.println("---------------------------------------------------------------------------------------------");
+        System.out.println("-------------------------------------------------------------------------------------------------");
         System.out.printf("%-76s %20d%n", "Σύνολο εσόδων", totalRevenue);
 
         return totalRevenue;
@@ -245,12 +245,12 @@ public class BudgetAnalyzer {
         list.sort(Map.Entry.comparingByKey());
 
         System.out.printf("%-60s %20s%n", "ΥΠΟΥΡΓΕΙΟ / ΦΟΡΕΑΣ", "ΠΟΣΟ ΕΞΟΔΩΝ (€)");
-        System.out.println("---------------------------------------------------------------------------------------------");
+        System.out.println("-------------------------------------------------------------------------------------------------");
         for (Map.Entry<String, Long> e : list) {
-            System.out.printf("%-60s %20d%n", e.getKey(), e.getValue());
+            System.out.printf("%-76s %20d%n", e.getKey(), e.getValue());
         }
-        System.out.println("---------------------------------------------------------------------------------------------");
-        System.out.printf("%-60s %20d%n",
+        System.out.println("-------------------------------------------------------------------------------------------------");
+        System.out.printf("%-76s %20d%n",
                 "Γενικό σύνολο εξόδων κρατικού προϋπολογισμού", totalExpenses);
 
         return totalExpenses;
@@ -333,18 +333,18 @@ public class BudgetAnalyzer {
 
         System.out.println();
         System.out.println("Ανάλυση για: " + expectedType);
-        System.out.printf("%-20s %-60s %-60s%n", "ΠΟΣΟ (€)", "ΥΠΟΥΡΓΕΙΟ / ΦΟΡΕΑΣ", "ΠΗΓΗ");
-        System.out.println("------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-20s %-76s %-60s%n", "ΠΟΣΟ (€)", "ΥΠΟΥΡΓΕΙΟ / ΦΟΡΕΑΣ", "ΠΗΓΗ");
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         long sum = 0L;
         for (Entry e : result) {
             String ministry = (e.ministry == null || e.ministry.isEmpty()) ? "-" : e.ministry;
-            System.out.printf("%-20d %-60s %-60s%n", e.amount, ministry, e.source);
+            System.out.printf("%-20d %-76s %-60s%n", e.amount, ministry, e.source);
             sum += e.amount;
         }
 
-        System.out.println("------------------------------------------------------------------------------------------------------------------------");
-        System.out.printf("%-20s %-60s %-60d%n", "ΣΥΝΟΛΟ", "", sum);
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-20s %-76s %-60d%n", "ΣΥΝΟΛΟ", "", sum);
     }
 
     /**
@@ -407,7 +407,7 @@ public class BudgetAnalyzer {
         System.out.println();
         System.out.println("Ανάλυση για ΥΠΟΥΡΓΕΙΟ: " + selectedMinistry);
         System.out.printf("%-10s %-20s %-60s%n", "ΤΥΠΟΣ", "ΠΟΣΟ (€)", "ΠΗΓΗ");
-        System.out.println("-----------------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------------");
 
         long sum = 0L;
         for (Entry e : result) {
@@ -415,7 +415,7 @@ public class BudgetAnalyzer {
             sum += e.amount;
         }
 
-        System.out.println("-----------------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------------");
         System.out.printf("%-10s %-20d %-60s%n", "ΣΥΝΟΛΟ", sum, "");
     }
 }
