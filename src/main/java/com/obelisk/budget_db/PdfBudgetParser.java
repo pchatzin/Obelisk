@@ -23,7 +23,7 @@ public class PdfBudgetParser {
 
     // Σελίδες του PDF που θέλουμε να αγνοούμε εντελώς
     private static final Set<Integer> EXCLUDED_PAGES = Set.of(
-            1, 2, 3, 4, 5, 6,
+            1, 2, 3, 4, 5, 6, 62, 63, 64, 65, 66, 
             71, 72, 73, 74, 75, 76, 77, 78
     );
 
