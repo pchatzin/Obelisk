@@ -1,0 +1,17 @@
+# Ignore Maven build output
+target/
+
+# Ignore compiled binaries
+*.jar
+*.war
+*.ear
+
+# Ignore logs
+*.log
+
+# Ignore IDE/project files
+.idea/
+*.iml
+.classpath
+.project
+.settings/target/
