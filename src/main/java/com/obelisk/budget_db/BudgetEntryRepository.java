@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BudgetEntryRepository extends JpaRepository<BudgetEntry, Long> {
-    // προς το παρόν δεν χρειάζονται custom μέθοδοι
 }

@@ -42,7 +42,7 @@ public class BudgetImporter implements CommandLineRunner {
 
         File[] pdfFiles = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".pdf"));
         if (pdfFiles == null || pdfFiles.length == 0) {
-            System.out.println(">>> Δεν βρέθηκαν PDF αρχεία.");
+            System.out.println(">>> Δεν βρέθηκαν PDF αρχεία στον φάκελο.");
             return;
         }
 
@@ -65,6 +65,8 @@ public class BudgetImporter implements CommandLineRunner {
                     })
                     .collect(Collectors.toList());
 
+            System.out.println(">>> Μετά το φίλτρο Ονομασία/Σύνολο/Οικ.έτος: " + entries.size());
+
             int i = 1;
             for (BudgetEntry e : entries) {
                 e.setLineNumber(i++);
@@ -72,30 +74,34 @@ public class BudgetImporter implements CommandLineRunner {
 
             repository.deleteAll();
             repository.saveAll(entries);
+            Path budgetFolder = Path.of("budget");
+            Files.createDirectories(budgetFolder);
 
-            String baseName = pdfFile.getName().replace(".pdf", "");
-            Path csvPath = Path.of("budget", baseName + ".csv");
+            String baseName = pdfFile.getName().replace(".pdf", ".csv");
+            Path csvPath = budgetFolder.resolve(baseName);
 
-            writeToCsv(entries, csvPath.toString());
+            writeToCsv(entries, csvPath);
 
             System.out.println(">>> Τελικό CSV δημιουργήθηκε: " + csvPath);
         }
     }
 
-    private void writeToCsv(List<BudgetEntry> entries, String csvPath) throws IOException {
-        Path path = Path.of(csvPath);
-        Files.createDirectories(path.getParent());
-
-        try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+    private void writeToCsv(List<BudgetEntry> entries, Path csvPath) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(csvPath, StandardCharsets.UTF_8)) {
             writer.write("# line,type,amount,ministry,source");
             writer.newLine();
 
             for (BudgetEntry e : entries) {
+                String ministry = e.getMinistry();
+                if (ministry == null || ministry.isBlank()) {
+                    ministry = "-";
+                }
+
                 String line = String.join(",",
                         safe(e.getLineNumber()),
                         safe(e.getType()),
                         safeAmount(e.getAmount()),
-                        escape(e.getMinistry()),
+                        escape(ministry),
                         escape(e.getSource())
                 );
                 writer.write(line);
@@ -104,14 +110,8 @@ public class BudgetImporter implements CommandLineRunner {
         }
     }
 
-    private String safe(Object o) {
-        return o == null ? "" : o.toString();
-    }
-
-    private String safeAmount(BigDecimal a) {
-        return a == null ? "" : a.toPlainString();
-    }
-
+    private String safe(Object o) { return o == null ? "" : o.toString(); }
+    private String safeAmount(BigDecimal a) { return a == null ? "" : a.toPlainString(); }
     private String escape(String s) {
         if (s == null) return "";
         s = s.replace("\"", "\"\"");
