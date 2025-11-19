@@ -46,6 +46,9 @@ public class BudgetImporter implements CommandLineRunner {
             return;
         }
 
+        Path budgetFolder = Path.of("budget");
+        Files.createDirectories(budgetFolder);
+
         for (File pdfFile : pdfFiles) {
             System.out.println(">>> Επεξεργασία: " + pdfFile.getName());
 
@@ -74,8 +77,6 @@ public class BudgetImporter implements CommandLineRunner {
 
             repository.deleteAll();
             repository.saveAll(entries);
-            Path budgetFolder = Path.of("budget");
-            Files.createDirectories(budgetFolder);
 
             String baseName = pdfFile.getName().replace(".pdf", ".csv");
             Path csvPath = budgetFolder.resolve(baseName);
