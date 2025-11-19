@@ -2,8 +2,8 @@ com/obelisk/budget_db/BudgetEntry.class
 com/obelisk/BudgetAnalyzer.class
 com/obelisk/budget_db/PdfBudgetParser.class
 com/obelisk/BudgetAnalyzer$Entry.class
-com/obelisk/ObeliskApplication.class
 com/obelisk/budget_db/BudgetImporter.class
+com/obelisk/ObeliskApplication.class
 com/obelisk/BudgetAnalyzer$Category.class
 com/obelisk/budget_db/BudgetEntryRepository.class
 com/obelisk/budget_db/PdfBudgetParser$BoldOnlyTextStripper.class
