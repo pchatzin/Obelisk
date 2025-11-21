@@ -189,5 +189,83 @@ public class Scenarios {
                 break;
         }
     }
+
+    private void showRevenueWithCodes() {
+        List<BudgetAnalyzer.Entry> revenueEntries = modifiedEntries.stream()
+        .filter(e ->"Έσοδα".equals(e.type))
+        .collect(Collectors.tolist());
+
+        long totalRevenue = revenueEntries.stream()
+        .mapToLong(e -> e.amount)
+        .sum();
+
+        System.out.printf("Τρέχον σύνολο εσόδων: %,d €%n", totalRevenue);
+        System.out.println();
+        System.out.println("Κωδικοί Εσόδων:");
+        System.out.printf("%-8s %-60s %15s%n", "ΚΩΔΙΚΟΣ", "ΠΕΡΙΓΡΑΦΗ", "ΠΟΣΟ (€)");
+        System.out.println("--------------------------------------------------------------------------------");
+
+        Map<String, List<BudgetAnalyzer.Entry>> revenuesByCode = revenueEntries.stream()
+        .filter(e -> e.code != null && !e.code.isEmpty())
+        .collect(Collectors.groupingBy(e -> e.code));
+
+        for (Map.Entry<String, List<BudgetAnalyzer.Entry>> entry : revenuesByCode.entrySet()) {
+            String code = entry.getKey();
+            long amount = entry.getValue().stream().mapToLong(e -> e.amount).sum();
+            String description = entry.getValue().get(0).source.replace(code, "").trim();
+            System.out.printf("%-8s %-60s %,15%n" , code, description, amount);
+        }
+    }
+
+    private void showExpenseWithCodes() {
+        List<BudgetAnalyzer.Entry> expenseEntries = modifiedEntries.stream()
+                .filter(e -> "Έξοδα".equals(e.type))
+                .collect(Collectors.toList());
+                
+        long totalExpenses = expenseEntries.stream()
+                .mapToLong(e -> e.amount)
+                .sum();
+                
+        System.out.printf("Τρέχον σύνολο εξόδων: %,d €%n", totalExpenses);
+        System.out.println();
+        System.out.println("Κωδικοί Εξόδων:");
+        System.out.printf("%-10s %-50s %-30s %15s%n", "ΚΩΔΙΚΟΣ", "ΠΕΡΙΓΡΑΦΗ", "ΥΠΟΥΡΓΕΙΟ", "ΠΟΣΟ (€)");
+        System.out.println("------------------------------------------------------------------------------------------");
+
+        Map<String, List<BudgetAnalyzer.Entry>> expenseByCode = expenseEntries.stream()
+        .filter(e -> e.code != null && !e.code.isEmpty())
+        .collect(Collectors.groupingBy(e -> e.code));
+
+        for (Map.Entry<String, List<BudgetAnalyzer.Entry>> entry : expenseByCode.entrySet()) {
+            String code = entry.getKey();
+            long amount = entry.getValue().stream().mapToLong(e -> e.amount).sum();
+            String description = entry.getValue().get(0).source.replace(code, "").trim();
+            String ministry = entry.getValue().get(0).ministry;
+            System.out.printf("%-10s %-50s %-30s %,15d%n", code, description, ministry, amount);
+        }
+    }
+
+     private void showMinistryRevenuesWithCodes(String ministry) {
+        List<BudgetAnalyzer.Entry> ministryEntries = modifiedEntries.stream()
+                .filter(e -> ministry.equals(e.ministry) && "Έσοδα".equals(e.type))
+                .collect(Collectors.toList());
+                
+        if (ministryEntries.isEmpty()) {
+            System.out.println("Δεν βρέθηκαν έσοδα για το υπουργείο: " + ministry);
+            return;
+        }
+
+        
+        long totalRevenue = ministryEntries.stream()
+                .mapToLong(e -> e.amount)
+                .sum();
+                
+        System.out.println();
+        System.out.println("ΕΣΟΔΑ ΓΙΑ ΥΠΟΥΡΓΕΙΟ: " + ministry);
+        System.out.printf("Σύνολο: %,d €%n", totalRevenue);
+        System.out.println();
+        System.out.printf("%-10s %-60s %15s%n", "ΚΩΔΙΚΟΣ", "ΠΕΡΙΓΡΑΦΗ", "ΠΟΣΟ (€)");
+        System.out.println("-------------------------------------------------------------------------");
+     }
 } 
 
