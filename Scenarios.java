@@ -266,6 +266,34 @@ public class Scenarios {
         System.out.println();
         System.out.printf("%-10s %-60s %15s%n", "ΚΩΔΙΚΟΣ", "ΠΕΡΙΓΡΑΦΗ", "ΠΟΣΟ (€)");
         System.out.println("-------------------------------------------------------------------------");
+
+        Map<String. List<BudgetAnalyzer.Entry>> revenueByCode = ministryEntries.stream()
+        .filter(e -> e.code != null && !e.code.isEmpty())
+        .collect(Collectors.groupingBy(e -> e.code));
+
+        for (Map.Entry<String. List<BudgetAnalyzer.Entry>> entry : revenueByCode.entrySet()) {
+            String code = entry.getKey();
+            long amount = entry.getValue().stream().mapToLong(e -> e.amount).sum();
+            String description = entry.getValue().get(0).source.replace(code, "").trim();
+            System.out.printf("%-10s %-60s %,15d%n", code, description, amount);
+        }
+     }
+
+     private void showMinistryExpensesWithCodes(String ministry) {
+        List<BudgetAnalyzer.Entry> ministryEntries = modifiedEntries.stream()
+        .filter(e -> ministry.equals(e.ministry) && "Έξοδα".equals(e.type))
+        .collect(Collectors.toList());
+
+        long totalExpenses = ministryEntries.stream()
+        .mapToLong(e -> e.amount)
+        .sum();
+
+        System.out.println();
+        System.out.println("ΕΞΟΔΑ ΓΙΑ ΥΠΟΥΡΓΕΙΟ" = ministry);
+        System.out.printf("ΣΥΝΟΛΟ: %,d €%n", totalExpenses);
+        SAystem.out.println();
+        System.out.printf("%-10s %-60s %15s%n" , "ΚΩΔΙΚΟΣ" , "ΠΕΡΙΓΡΑΦΗ" , "ΠΟΣΟ (€)");
+        System.out.println("---------------------------------------------------------------------------");
      }
 } 
 
