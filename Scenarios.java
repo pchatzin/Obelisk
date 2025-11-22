@@ -579,14 +579,19 @@ public class Scenarios {
         System.out.println("ΤΕΛΙΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΜΕ ΑΛΛΑΓΕΣ");
         System.out.println("==================================================");
 
+        System.out.println();
+        System.out.println("==================================================");
+        System.out.println("ΠΙΝΑΚΑΣ ΕΣΟΔΩΝ ΜΕ ΤΙΣ ΑΛΛΑΓΕΣ");
+        System.out.println("==================================================");
+        showRevenueTableWithChanges();
 
-        long originalRevenue = calculateTotalRevenue(originalEntries);
-        long originalExpenses = calculateTotalExpenses(originalExpenses);
-        long originalBalance = originalRevenue - originalExpenses;
+        System.out.println();
+        System.out.println("==================================================");
+        System.out.println("ΠΙΝΑΚΑΣ ΕΞΟΔΩΝ ΜΕ ΤΙΣ ΑΛΛΑΓΕΣ");
+        System.out.println("==================================================");
+        showExpenseTableWithChanges();
 
-        long newRevenue = calculateTotalRevenue(modifiedEntries);
-        long addNewExpenses = calculateTotalExpenses(modifiedEntries);
-        long newBalance = newRevenue - newExpenses;
+        System.out.println("Ολοκλήρωση scenarios.");
     }
 } 
 
