@@ -1,5 +1,6 @@
 package com.obelisk;
 
+import java.sql.BatchUpdateException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ public class Scenarios {
     private boolean askToContinueChanges() {
 
         while (true) {
-            System.out.println.("Θέλετε να συνεχίσετε τις αλλαγές; (ΝΑΙ ή ΟΧΙ):");
+            System.out.println("Θέλετε να συνεχίσετε τις αλλαγές; (ΝΑΙ ή ΟΧΙ):");
             String answer = scanner.nextLine().trim().toUpperCase(Locale.ROOT);
 
             if (answer.equals("ΝΑΙ")) {
@@ -289,11 +290,303 @@ public class Scenarios {
         .sum();
 
         System.out.println();
-        System.out.println("ΕΞΟΔΑ ΓΙΑ ΥΠΟΥΡΓΕΙΟ" = ministry);
+        System.out.println(ministry = "ΕΞΟΔΑ ΓΙΑ ΥΠΟΥΡΓΕΙΟ");
         System.out.printf("ΣΥΝΟΛΟ: %,d €%n", totalExpenses);
-        SAystem.out.println();
+        System.out.println();
         System.out.printf("%-10s %-60s %15s%n" , "ΚΩΔΙΚΟΣ" , "ΠΕΡΙΓΡΑΦΗ" , "ΠΟΣΟ (€)");
         System.out.println("---------------------------------------------------------------------------");
+
+        Map<String, List<BudgetAnalyzer.Entry>> expensesByCode = ministryEntries.stream()
+             .filter(e -> e.code != null && !e.code.isEmpty())
+             .collect(Collectors.groupingBy(e -> e.code));
+
+             for (Map.Entry<String, List<BudgetAnalyzer.Entry>> entry :  expensesByCode.entrySet()) {
+             String code = entry.getKey();
+             long amount = entry.getvalue().stream().mapToLong(e -> e.amount).sum();
+             String description = entry.getValue().get(0).source.replace(code, "").trim();
+             System.out.printf("%-10s %-60s %,15d%n", code, description, amount);
+             }
      }
+
+     private void changeRevenueByCode() {
+        System.out.println();
+        System.out.print("Εισάγετε τον κωδικό του εσόδου που θέλετε να αλλάξετε: ");
+        String code = scanner.nextLine().trim();
+
+        List<BudgetAnalyzer.Entry> revenueEntries = modifiedEntries.stream()
+                .filter(e -> "Έσοδα".equals(e.type) && code.equals(e.code))
+                .collect(Collectors.toList());
+        
+        if (revenueEntries.isEmpty()) {
+            System.out.println("Δεν βρέθηκε έσοδο με κωδικό: " + code);
+            return;
+        }
+        
+        long currentAmount = revenueEntries.stream().mapToLong(e -> e.amount).sum();
+        String description = revenueEntries.get(0).source.replace(code, "").trim();
+        
+        System.out.printf("Τρέχον έσοδο: %s - %s - %,d €%n", code, description, currentAmount);
+        System.out.print("Εισάγετε το νέο ποσό (€): ");
+        long newAmount = getAmountFromUser();
+
+
+        modifiedEntries.removeAll(revenueEntries);
+
+        BudgetAnalyzer.Entry updatedRevenue = new BudgetAnalyzer.Entry();
+        updatedRevenue.type = "Έσοδα";
+        updatedRevenue.amount = newAmount;
+        updatedRevenue.ministry = "-";
+        updatedRevenue.source = code + " " + description;
+        updatedRevenue.code = code;
+
+        modifiedEntries.add(updatedRevenue);
+
+        System.out.printf("Επιτυχής αλλαγή ! Το έσοδο %s άλλαξε από %,d € σε %,d €%n",
+            code, curentAmount, newAmount);
+     }
+
+     private void changeExpenseByCode() {
+        System.out.println();
+        System.out.println("Εισάγετε τον κωδικό του εξόδου που θέλετε να αλλάξετε: ");
+        String code = scanner.nextLine().trim();
+
+        List<BudgetAnalyzer.Entry> expenseEntries = modifiedEntries.stream()
+                .filter(e -> "Έξοδα".equals(e.type) && code.equals(e.code))
+                .collect(Collectors.toList());
+        
+        if (expenseEntries.isEmpty()) {
+            System.out.println("Δεν βρέθηκε έξοδο με κωδικό: " + code);
+            return;
+        }
+        
+        long currentAmount = expenseEntries.stream().mapToLong(e -> e.amount).sum();
+        String description = expenseEntries.get(0).source.replace(code, "").trim();
+        String ministry = expenseEntries.get(0).ministry;
+        
+        System.out.printf("Τρέχον έξοδο: %s - %s - %s - %,d €%n", code, description, ministry, currentAmount);
+        System.out.println("Εισάγετε το νέο ποσό (€): ");
+        long newAmount = getAmountFromUser();
+
+
+        modifiedEntries.removeAll(expenseEntries);
+        
+        BudgetAnalyzer.Entry updatedExpense = new BudgetAnalyzer.Entry();
+        updatedExpense.type = "Έξοδα";
+        updatedExpense.amount = newAmount;
+        updatedExpense.ministry = ministry;
+        updatedExpense.source = code + " " + description;
+        updatedExpense.code = code;
+        
+        modifiedEntries.add(updatedExpense);
+        
+        System.out.printf("Επιτυχής αλλαγή! Το έξοδο %s άλλαξε από %,d € σε %,d €%n", 
+         code, currentAmount, newAmount);
+    }
+
+    private void changeMinistryRevenueByCode(String ministry) {
+        System.out.println();
+
+        showMinistryRevenuesWithCodes(ministry);
+        
+        System.out.println("Εισάγετε τον κωδικό του εσόδου που θέλετε να αλλάξετε: ");
+        String code = scanner.nextLine().trim();
+
+        List<BudgetAnalyzer.Entry> revenueEntries = modifiedEntries.stream()
+                .filter(e -> "Έσοδα".equals(e.type) && code.equals(e.code) && ministry.equals(e.ministry))
+                .collect(Collectors.toList());
+        
+        if (revenueEntries.isEmpty()) {
+            System.out.println("Δεν βρέθηκε έσοδο με κωδικό: " + code + " για το υπουργείο: " + ministry);
+            return;
+        }
+
+
+        long currentAmount = revenueEntries.stream().mapToLong(e -> e.amount).sum();
+        String description = revenueEntries.get(0).source.replace(code, "").trim();
+        
+        System.out.printf("Τρέχον έσοδο: %s - %s - %,d €%n", code, description, currentAmount);
+        System.out.println("Εισάγετε το νέο ποσό (€): ");
+        long newAmount = getAmountFromUser();
+
+
+        modifiedEntries.removeAll(revenueEntries);
+        
+        BudgetAnalyzer.Entry updatedRevenue = new BudgetAnalyzer.Entry();
+        updatedRevenue.type = "Έσοδα";
+        updatedRevenue.amount = newAmount;
+        updatedRevenue.ministry = ministry;
+        updatedRevenue.source = code + " " + description;
+        updatedRevenue.code = code;
+        
+        modifiedEntries.add(updatedRevenue);
+
+         System.out.printf("Επιτυχής αλλαγή! Το έσοδο %s του %s άλλαξε από %,d € σε %,d €%n", 
+          code, ministry, currentAmount, newAmount);
+    }
+
+
+    private void changeMinistryExpenseByCode(String ministry) {
+        System.out.println();
+
+        showMinistryExpensesWithCodes(ministry);
+        
+        System.out.print("Εισάγετε τον κωδικό του εξόδου που θέλετε να αλλάξετε: ");
+        String code = scanner.nextLine().trim();
+
+        List<BudgetAnalyzer.Entry> expenseEntries = modifiedEntries.stream()
+                .filter(e -> "Έξοδα".equals(e.type) && code.equals(e.code) && ministry.equals(e.ministry))
+                .collect(Collectors.toList());
+        
+        if (expenseEntries.isEmpty()) {
+            System.out.println("Δεν βρέθηκε έξοδο με κωδικό: " + code + " για το υπουργείο: " + ministry);
+            return;
+        }
+
+        long currentAmount = expenseEntries.stream().mapToLong(e -> e.amount).sum();
+        String description = expenseEntries.get(0).source.replace(code, "").trim();
+        
+        System.out.printf("Τρέχον έξοδο: %s - %s - %,d €%n", code, description, currentAmount);
+        System.out.println("Εισάγετε το νέο ποσό (€): ");
+        long newAmount = getAmountFromUser();
+
+        modifiedEntries.removeAll(expenseEntries);
+        
+        BudgetAnalyzer.Entry updatedExpense = new BudgetAnalyzer.Entry();
+        updatedExpense.type = "Έξοδα";
+        updatedExpense.amount = newAmount;
+        updatedExpense.ministry = ministry;
+        updatedExpense.source = code + " " + description;
+        updatedExpense.code = code;
+        
+        modifiedEntries.add(updatedExpense);
+
+        System.out.printf("Επιτυχής αλλαγή! Το έξοδο %s του %s άλλαξε από %,d € σε %,d €%n", 
+         code, ministry, currentAmount, newAmount);
+    }
+
+    private void addNewRevenue() {
+        System.out.println();
+        System.out.println("Κωδικός νέου εσόδου:");
+        String code = scanner.nextLine().trim();
+        System.out.println("Περιγραφή νέου εισόδου:");
+        String description = scanner.nextLine();
+        System.out.println("Ποσό νέου εσόδου:");
+        long amount = getAmountFromUser();
+
+        BudgetAnalyzer.Entry addNewRevenue = new BudgetAnalyzer.Entry();
+        newRevenue.type = "Έσοδα";
+        newRevenue.amount = amount;
+        newRevenue.ministry = "-";
+        newRevenue.source = code + " " + description;
+        newRevenue.code = code ;
+
+
+        modifiedEntries.add(newRevenue);
+
+        System.out.printf("Προστέθηκε νέο έσοδο: %s %s - $,d €%n", code, description, amount);
+    }
+
+
+    private void addNewExpense() {
+
+        System.out.println();
+        Set<String> ministries = getUniqueMinistries();
+        List<String> ministryList = new ArrayList<>(ministries);
+        Collections.sort(ministryList);
+        
+        System.out.println("Υπουργεία:");
+        for (int i = 0; i < ministryList.size(); i++) {
+            System.out.printf("%2d. %s%n", i + 1, ministryList.get(i));
+        }
+        
+        System.out.println("Επιλέξτε υπουργείο:");
+        int ministryChoice = getChoice(1, ministryList.size());
+        String ministry = ministryList.get(ministryChoice - 1);
+        System.out.println("Κωδικός νέου εξόδου:");
+        String code = scanner.nextLine().trim();
+        System.out.println("Περιγραφή νέου εξόδου:");
+        String description = scanner.nextLine();
+        System.out.println("Ποσό νέου εξόδου (€):");
+        long amount = getAmountFromUser();
+
+
+        BudgetAnalyzer.Entry newExpense = new BudgetAnalyzer.Entry();
+        newExpense.type = "Έξοδα";
+        newExpense.amount = amount;
+        newExpense.ministry = ministry;
+        newExpense.source = code + " " + description;
+        newExpense.code = code;
+
+        modifiedEntries.add(newExpense);
+        
+        System.out.printf("Προστέθηκε νέο έξοδο: %s %s - %s - %,d €%n", code, description, ministry, amount);
+    }
+
+
+    private void transferExpenses(String fromMinistry) {
+
+        System.out.println();
+        Set<String> ministries = getUniqueMinistries();
+        List<String> miistryList = new ArrayList<>(ministries);
+        Collections.sort(ministryList);
+
+
+        ministryList.remove(fromMinistry);
+
+        System.out.println("Μεταφορά από:" + fromMinistry);
+        System.out.println("Προς Υπουργείο:");
+
+        for ( int i = 0; i < ministryList.size(); i++) {
+            System.out.printf("%2d. %s%n", i + 1, ministryList.get(i));
+        }
+
+        System.out.println("Επιλέξετε προορισμό:");
+        int toChoice = getChoice(1, miistryList.size());
+        String toMinistry = ministryList.get(toChoice - 1);
+        System.out.println("Ποσό μεταφοράς:");
+        long amount = getAmountFromUser();
+        System.out.println("Περιγραφή μεταφοράς:");
+        String desscription = scanner.nextLine();
+
+
+        BudgetAnalyzer.Entry reduction = new BudgetAnalyzer.Entry();
+        reduction.type = "Έξοδα";
+        reduction.amount = -amount;
+        reduction.ministry = fromMinistry;
+        reduction.source = "Μεταφορά προς" + toMinistry + ":" + description;
+        reduction.code = "TRF1";
+
+
+
+        BudgetAnalyzer.Entry addition = new BudgetAnalyzer.Entry();
+        addition.type = "Έξοδα";
+        addition.amount = amount;
+        addition.ministry = toMinistry;
+        addition.source = "Μεταφορά από" + fromMinistry + ":" + description; 
+        addition.code = "TRF1";
+
+
+        modifiedEntries.add(reduction);
+        modifiedEntries.add(addition);
+
+        System.out.printf("Μεταφέρθηκαν %,d € από %s προς %s.%n", amount, fromMinistry, toMinistry);
+    }
+
+
+    private void showFinalResultsWithTables() {
+        System.out.println();
+        System.out.println("==================================================");
+        System.out.println("ΤΕΛΙΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΜΕ ΑΛΛΑΓΕΣ");
+        System.out.println("==================================================");
+
+
+        long originalRevenue = calculateTotalRevenue(originalEntries);
+        long originalExpenses = calculateTotalExpenses(originalExpenses);
+        long originalBalance = originalRevenue - originalExpenses;
+
+        long newRevenue = calculateTotalRevenue(modifiedEntries);
+        long addNewExpenses = calculateTotalExpenses(modifiedEntries);
+        long newBalance = newRevenue - newExpenses;
+    }
 } 
 
