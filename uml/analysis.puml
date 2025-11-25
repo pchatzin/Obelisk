@@ -1,0 +1,59 @@
+@startuml
+title Obelisk Project UML Diagram (Analysis Branch)
+
+package com.obelisk {
+  class ObeliskApplication {
+    +main(String[] args)
+  }
+
+  class BudgetAnalyzer {
+    +analyze()
+    +run()
+  }
+
+  class "BudgetAnalyzer$Entry" {
+    +String type
+    +long amount
+    +String ministry
+    +String source
+    +String code
+  }
+
+  class "BudgetAnalyzer$Category" {
+    +String name
+  }
+}
+
+package com.obelisk.budget_db {
+  class BudgetEntry {
+    +String code
+    +String description
+    +long amount
+    +String ministry
+  }
+
+  class BudgetEntryRepository {
+    +save(BudgetEntry)
+    +findByCode(String)
+  }
+
+  class BudgetImporter {
+    +importCSV(String file)
+    +importPDF(String file)
+  }
+
+  class PdfBudgetParser {
+    +parse(String file)
+  }
+}
+
+' Relationships
+ObeliskApplication --> BudgetAnalyzer : uses
+BudgetAnalyzer --> "BudgetAnalyzer$Entry" : contains
+BudgetAnalyzer --> "BudgetAnalyzer$Category" : categorizes
+BudgetAnalyzer --> BudgetEntry : analyzes
+BudgetImporter --> BudgetEntry : creates
+BudgetImporter --> PdfBudgetParser : uses
+BudgetEntryRepository --> BudgetEntry : manages
+
+@enduml
