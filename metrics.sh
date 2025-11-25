@@ -8,18 +8,17 @@ echo "===================="
 # Βεβαιώσου ότι είμαστε σε git repo
 git rev-parse --is-inside-work-tree >/dev/null
 
-# Συλλογή authors (emails ως keys)
+########################################
+#  Συλλογή authors (emails)
+########################################
 mapfile -t emails < <(git log --all --format='%ae' | sort -u)
 
-# Δηλώσεις associative arrays
-declare -A name_by_email
-declare -A commits
-declare -A added
-declare -A deleted
-declare -A classes
-declare -A methods
+# Associative arrays ανά email
+declare -A name_by_email commits added deleted
 
-# Map email -> display name
+########################################
+#  Όνομα ανά email
+########################################
 for email in "${emails[@]}"; do
   name=$(
     git log --all --author="$email" --format='%an' \
@@ -28,10 +27,18 @@ for email in "${emails[@]}"; do
       | head -1 || true
   )
   [[ -z "$name" ]] && name="$email"
+
+  # Ομογενοποίηση ονόματος για την Ελισάβετ
+  if [[ "$name" == "Elisavet" ]]; then
+    name="Elisavet Roumeli"
+  fi
+
   name_by_email["$email"]="$name"
 done
 
-# Commits per email
+########################################
+#  Commits ανά email
+########################################
 for email in "${emails[@]}"; do
   commits["$email"]=$(
     git log --all --no-merges --author="$email" --pretty=oneline \
@@ -39,84 +46,68 @@ for email in "${emails[@]}"; do
   )
 done
 
-# Lines added/deleted per email
+########################################
+#  Γραμμές added / deleted ανά email
+########################################
 for email in "${emails[@]}"; do
   read add del < <(
     git log --all --no-merges --author="$email" --numstat --pretty=tformat: \
       | awk '
-          {a=$1; d=$2;
-           if(a=="-") a=0;
-           if(d=="-") d=0;
-           add+=a; del+=d}
-          END {print add+0, del+0}'
+          { a=$1; d=$2;
+            if (a=="-") a=0;
+            if (d=="-") d=0;
+            add+=a; del+=d
+          }
+          END { print add+0, del+0 }'
   )
   added["$email"]="${add:-0}"
   deleted["$email"]="${del:-0}"
 done
 
-# Classes & methods per email
-while read -r type email count; do
-  case "$type" in
-    C)
-      classes["$email"]=$(( ${classes["$email"]:-0} + count ))
-      ;;
-    M)
-      methods["$email"]=$(( ${methods["$email"]:-0} + count ))
-      ;;
-  esac
-done < <(
-  git ls-files '*.java' | while read -r file; do
-    git blame --line-porcelain "$file" | awk '
-      # Παίρνουμε το email του author
-      /^author-mail / {
-        gsub(/[<>]/,"",$2);
-        email=$2;
-        next;
-      }
+########################################
+#  Άθροιση ανά ΟΝΟΜΑ (όχι email)
+########################################
 
-      # Αγνοούμε comment-only γραμμές
-      /^[[:space:]]*\/\// { next }
+declare -A total_commits total_added total_deleted
+declare -A seen_name
+names=()
 
-      # Κλάσεις: οτιδήποτε περιέχει "class Όνομα"
-      /\bclass[[:space:]]+[A-Za-z_][A-Za-z0-9_]*/ {
-        if (email != "") {
-          classes[email]++
-        }
-      }
-
-      # Μέθοδοι: γραμμές με () και { που δεν είναι if/for/while/switch/catch
-      /\(/ && /\)/ && /\{/ &&
-      !/\b(if|for|while|switch|catch)\b/ &&
-      !/\bclass\b/ {
-        if (email != "") {
-          methods[email]++
-        }
-      }
-
-      END {
-        for (e in classes) print "C", e, classes[e]
-        for (e in methods) print "M", e, methods[e]
-      }'
-  done
-)
-
-# Header
-printf "\n%-25s | %7s | %10s | %12s | %7s | %7s\n" \
-  "User" "Commits" "Lines Added" "Lines Deleted" "Classes" "Methods"
-echo "-----------------------------------------------------------------------------------------------"
-
-# Γραμμές report
 for email in "${emails[@]}"; do
   name="${name_by_email[$email]:-$email}"
-  printf "%-25s | %7s | %10s | %12s | %7s | %7s\n" \
+
+  # (ξανα-ομογενοποίηση για σιγουριά)
+  if [[ "$name" == "Elisavet" ]]; then
+    name="Elisavet Roumeli"
+  fi
+
+  if [[ -z "${seen_name[$name]+x}" ]]; then
+    names+=("$name")
+    seen_name["$name"]=1
+  fi
+
+  total_commits["$name"]=$(( ${total_commits["$name"]:-0} + ${commits["$email"]:-0} ))
+  total_added["$name"]=$(( ${total_added["$name"]:-0} + ${added["$email"]:-0} ))
+  total_deleted["$name"]=$(( ${total_deleted["$name"]:-0} + ${deleted["$email"]:-0} ))
+done
+
+########################################
+#  Τελικό Report
+########################################
+
+printf "\n%-25s | %7s | %10s | %12s\n" \
+  "User" "Commits" "Lines Added" "Lines Deleted"
+echo "--------------------------------------------------------------"
+
+for name in "${names[@]}"; do
+  printf "%-25s | %7s | %10s | %12s\n" \
     "$name" \
-    "${commits[$email]:-0}" \
-    "${added[$email]:-0}" \
-    "${deleted[$email]:-0}" \
-    "${classes[$email]:-0}" \
-    "${methods[$email]:-0}"
+    "${total_commits["$name"]:-0}" \
+    "${total_added["$name"]:-0}" \
+    "${total_deleted["$name"]:-0}"
 done
 
 echo "===================="
 echo " End of Report "
 echo "===================="
+
+
