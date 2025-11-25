@@ -638,5 +638,56 @@ class Scenarios {
         System.out.println();
         System.out.println("Ολοκλήρωση scenarios.");
     }
+
+   public static void main(String[] args) {
+    try {
+
+        List<BudgetEntry> entries = createTestData();
+
+        Scenarios scenarios = new Scenarios(entries);
+        scenarios.runScenarios();
+
+    } catch (Exception e) {
+        System.err.println("Σφάλμα: " + e.getMessage());
+    }
+ }
+
+ private static List<BudgetEntry> createTestData() {
+    List<BudgetEntry> entries = new ArrayList<>();
+
+    BudgetEntry revenue1 = new BudgetEntry();
+    revenue1.type = "Έσοδα";
+    revenue1.amount = 1000000L;
+    revenue1.ministry = "-";
+    revenue1.source = "11 Φόροι εισοδήματος";
+    revenue1.code = "11";
+    entries.add(revenue1);
+    
+    BudgetEntry revenue2 = new BudgetEntry();
+    revenue2.type = "Έσοδα";
+    revenue2.amount = 500000L;
+    revenue2.ministry = "-";
+    revenue2.source = "12 ΦΠΑ";
+    revenue2.code = "12";
+    entries.add(revenue2);
+
+    BudgetEntry expense1 = new BudgetEntry();
+    expense1.type = "Έξοδα";
+    expense1.amount = 300000L;
+    expense1.ministry = "ΥΠΟΥΡΓΕΙΟ ΟΙΚΟΝΟΜΙΚΩΝ";
+    expense1.source = "21 Μισθοί";
+    expense1.code = "21";
+    entries.add(expense1);
+    
+    BudgetEntry expense2 = new BudgetEntry();
+    expense2.type = "Έξοδα";
+    expense2.amount = 200000L;
+    expense2.ministry = "ΥΠΟΥΡΓΕΙΟ ΥΓΕΙΑΣ";
+    expense2.source = "22 Φαρμακευτική περίθαλψη";
+    expense2.code = "22";
+    entries.add(expense2);
+    
+    return entries;
+    }
 } 
 
