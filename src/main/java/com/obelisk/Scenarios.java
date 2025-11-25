@@ -3,6 +3,10 @@ package com.obelisk;
 import java.sql.BatchUpdateException;
 import java.util.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 /**
@@ -638,56 +642,82 @@ class Scenarios {
         System.out.println();
         System.out.println("Ολοκλήρωση scenarios.");
     }
-
-   public static void main(String[] args) {
+    public static void main(String[] args) {
     try {
-
-        List<BudgetEntry> entries = createTestData();
-
+        List<BudgetEntry> entries = loadEntriesFromCSV("budget/budget2025.csv");
+        
+        System.out.println("Φορτώθηκαν " + entries.size() + " εγγραφές από το CSV");
+        
         Scenarios scenarios = new Scenarios(entries);
         scenarios.runScenarios();
 
     } catch (Exception e) {
         System.err.println("Σφάλμα: " + e.getMessage());
+        e.printStackTrace();
     }
  }
 
- private static List<BudgetEntry> createTestData() {
-    List<BudgetEntry> entries = new ArrayList<>();
-
-    BudgetEntry revenue1 = new BudgetEntry();
-    revenue1.type = "Έσοδα";
-    revenue1.amount = 1000000L;
-    revenue1.ministry = "-";
-    revenue1.source = "11 Φόροι εισοδήματος";
-    revenue1.code = "11";
-    entries.add(revenue1);
+    private static List<BudgetEntry> loadEntriesFromCSV(String csvFile) throws IOException {
+        List<BudgetEntry> entries = new ArrayList<>();
+        Path path = Paths.get(csvFile);
     
-    BudgetEntry revenue2 = new BudgetEntry();
-    revenue2.type = "Έσοδα";
-    revenue2.amount = 500000L;
-    revenue2.ministry = "-";
-    revenue2.source = "12 ΦΠΑ";
-    revenue2.code = "12";
-    entries.add(revenue2);
-
-    BudgetEntry expense1 = new BudgetEntry();
-    expense1.type = "Έξοδα";
-    expense1.amount = 300000L;
-    expense1.ministry = "ΥΠΟΥΡΓΕΙΟ ΟΙΚΟΝΟΜΙΚΩΝ";
-    expense1.source = "21 Μισθοί";
-    expense1.code = "21";
-    entries.add(expense1);
-    
-    BudgetEntry expense2 = new BudgetEntry();
-    expense2.type = "Έξοδα";
-    expense2.amount = 200000L;
-    expense2.ministry = "ΥΠΟΥΡΓΕΙΟ ΥΓΕΙΑΣ";
-    expense2.source = "22 Φαρμακευτική περίθαλψη";
-    expense2.code = "22";
-    entries.add(expense2);
-    
-    return entries;
+     try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        String line;
+        boolean first = true;
+        
+        while ((line = br.readLine()) != null) {
+            if (line.trim().isEmpty()) continue;
+            if (first) {
+                first = false;
+                continue;
+            }
+            
+            String[] fields = parseCsvLine(line);
+            if (fields.length >= 5) {
+                BudgetEntry entry = new BudgetEntry();
+                entry.type = fields[1].trim();
+                entry.amount = Long.parseLong(fields[2].trim());
+                entry.ministry = fields[3].trim();
+                entry.source = fields[4].trim();
+                entry.code = extractLeadingDigits(entry.source);
+                entries.add(entry);
+            }
+        }
     }
+    return entries;
+ }
+    private static String[] parseCsvLine(String line) {
+        List<String> fields = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inQuotes = false;
+
+     for (int i = 0; i < line.length(); i++) {
+        char c = line.charAt(i);
+        if (c == '"') {
+            inQuotes = !inQuotes;
+        } else if (c == ',' && !inQuotes) {
+            fields.add(current.toString());
+            current.setLength(0);
+        } else {
+            current.append(c);
+        }
+    }
+    fields.add(current.toString());
+    return fields.toArray(new String[0]);
+ }
+
+    private static String extractLeadingDigits(String text) {
+       if (text == null) return "";
+         StringBuilder sb = new StringBuilder();
+         for (int i = 0; i < text.length(); i++) {
+           char c = text.charAt(i);
+           if (Character.isDigit(c)) {
+             sb.append(c);
+            } else {
+               break;
+        }
+     }
+    return sb.toString();
+  }
 } 
 
