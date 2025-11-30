@@ -716,9 +716,7 @@ class Scenarios {
      } else {
          System.out.println("ΚΑΤΑΣΤΑΣΗ: ΙΣΟΖΥΓΙΣΜΕΝΟΣ");
      }
-    
-     System.out.println();
-     System.out.println("Ολοκλήρωση scenarios.");
+
      System.out.println();
      System.out.println("Ολοκλήρωση scenarios.");
      }
