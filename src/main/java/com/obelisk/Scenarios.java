@@ -635,13 +635,88 @@ class Scenarios {
 
 
     private void showFinalResultsWithTables() {
+      System.out.println();
+      System.out.println("==================================================");
+      System.out.println("ΤΕΛΙΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΜΕ ΑΛΛΑΓΕΣ");
+      System.out.println("==================================================");
+      System.out.println();
+      System.out.println("ΠΙΝΑΚΑΣ 1 - ΕΣΟΔΑ ΜΕ ΑΛΛΑΓΕΣ");
+      System.out.println("==================================================");
+    
+      Map<String, BudgetEntry> revenueCategories = new LinkedHashMap<>();
+      Set<String> seenRevenueCodes = new HashSet<>();
+
+      long totalRevenue = 0L;
+
+      for (BudgetEntry e : modifiedEntries) {
+          if (!"Έσοδα".equals(e.type)) {
+              continue;
+            }
+
+          if (e.code != null && e.code.length() >= 2 && !seenRevenueCodes.contains(e.code)) {
+              seenRevenueCodes.add(e.code);
+
+              BudgetEntry category = new BudgetEntry();
+              category.code = e.code;
+              String label = e.source.substring(e.code.length()).trim();
+              category.source = label;
+              category.amount = e.amount;
+              revenueCategories.put(category.code, category);
+              totalRevenue += e.amount;
+            }
+        }
+
+       System.out.printf("%-5s %-70s %20s%n", "ΚΩΔ", "ΠΕΡΙΓΡΑΦΗ", "ΠΟΣΟ (€)");
+       System.out.println("-------------------------------------------------------------------------------------------------");
+       for (BudgetEntry c : revenueCategories.values()) {
+          System.out.printf("%-5s %-70s %20d%n", c.code, c.source, c.amount);
+        }
+       System.out.println("-------------------------------------------------------------------------------------------------");
+       System.out.printf("%-76s %20d%n", "Σύνολο εσόδων", totalRevenue);
+       System.out.println();
+       System.out.println("ΠΙΝΑΚΑΣ 2 - ΕΞΟΔΑ ΑΝΑ ΥΠΟΥΡΓΕΙΟ ΜΕ ΑΛΛΑΓΕΣ");
+       System.out.println("==================================================");
+    
+       Map<String, Long> expensesByMinistry = new HashMap<>();
+       long totalExpenses = 0L;
+
+       for (BudgetEntry e : modifiedEntries) {
+           if (!"Έξοδα".equals(e.type)) continue;
+
+          String ministry = (e.ministry == null || e.ministry.isEmpty()) ? "-" : e.ministry;
+          expensesByMinistry.merge(ministry, e.amount, Long::sum);
+          totalExpenses += e.amount;
+        }
+
+       List<Map.Entry<String, Long>> list = new ArrayList<>(expensesByMinistry.entrySet());
+       list.sort(Map.Entry.comparingByKey());
+
+       System.out.printf("%-60s %20s%n", "ΥΠΟΥΡΓΕΙΟ / ΦΟΡΕΑΣ", "ΠΟΣΟ ΕΞΟΔΩΝ (€)");
+       System.out.println("-------------------------------------------------------------------------------------------------");
+       for (Map.Entry<String, Long> e : list) {
+           System.out.printf("%-76s %20d%n", e.getKey(), e.getValue());
+        }
+        System.out.println("-------------------------------------------------------------------------------------------------");
+        System.out.printf("%-76s %20d%n", "Γενικό σύνολο εξόδων", totalExpenses);
         System.out.println();
+        System.out.println("ΤΕΛΙΚΟ ΑΠΟΤΕΛΕΣΜΑ");
         System.out.println("==================================================");
-        System.out.println("ΤΕΛΙΚΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΜΕ ΑΛΛΑΓΕΣ");
-        System.out.println("==================================================");
+        long result = totalRevenue - totalExpenses;
+        System.out.printf("ΕΣΟΔΑ: %,d €%n", totalRevenue);
+        System.out.printf("ΕΞΟΔΑ: %,d €%n", totalExpenses);
+        System.out.printf("ΑΠΟΤΕΛΕΣΜΑ: %,d €%n", result);
+    
+        if (result > 0) {
+           System.out.println("ΚΑΤΑΣΤΑΣΗ: ΠΛΕΟΝΑΣΜΑΤΙΚΟΣ");
+        } else if (result < 0) {
+           System.out.println("ΚΑΤΑΣΤΑΣΗ: ΕΛΛΕΙΜΜΑΤΙΚΟΣ");
+        } else {
+           System.out.println("ΚΑΤΑΣΤΑΣΗ: ΙΣΟΖΥΓΙΣΜΕΝΟΣ");
+        }
+    
         System.out.println();
         System.out.println("Ολοκλήρωση scenarios.");
-    }
+ }
     public static void main(String[] args) {
     try {
         List<BudgetEntry> entries = loadEntriesFromCSV("budget/budget2025.csv");
