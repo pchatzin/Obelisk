@@ -48,20 +48,21 @@ class Scenarios {
     }
 
     public void runScenarios() {
-        System.out.println();
-        System.out.println("=============================================================");
-        System.out.println("ΑΛΛΑΓΕΣ ΣΤΟΝ ΠΡΟΥΠΟΛΟΓΙΣΜΟ");
-        System.out.println("=============================================================");
-
-        if(!askForChanges()) {
-            System.out.println("Τερματισμός προγράμματος");
-            return;
+       System.out.println();
+       System.out.println("=============================================================");
+       System.out.println("ΑΛΛΑΓΕΣ ΣΤΟΝ ΠΡΟΥΠΟΛΟΓΙΣΜΟ");
+       System.out.println("=============================================================");
+      
+       if (!askForChanges()) {
+          System.out.println("Τερματισμός προγράμματος");
+          return;
         }
 
-        boolean continueChanges = true;
-        while (continueChanges) {
-            showChangeMenu();
-            continueChanges = askToContinueChanges();
+        boolean moreChanges = true;
+        while (moreChanges) {
+          showChangeMenu();
+
+          moreChanges = askToContinueChanges();
         }
 
         showFinalResultsWithTables();
@@ -99,17 +100,16 @@ class Scenarios {
 
 
     private boolean askToContinueChanges() {
-
         while (true) {
-            System.out.println("Θέλετε να συνεχίσετε τις αλλαγές; (ΝΑΙ ή ΟΧΙ):");
-            String answer = scanner.nextLine().trim().toUpperCase(Locale.ROOT);
+           System.out.println("Θέλετε να συνεχίσετε τις αλλαγές; (ΝΑΙ ή ΟΧΙ):");
+           String answer = scanner.nextLine().trim().toUpperCase(Locale.ROOT);
 
-            if (answer.equals("ΝΑΙ")) {
-                return true;
+           if (answer.equals("ΝΑΙ")) {
+               return true;
             } else if (answer.equals("ΟΧΙ")) {
-                return false;
+               return false;
             } else {
-                System.out.println("Παρακαλώ απαντήστε με ΝΑΙ ή ΟΧΙ");
+               System.out.println("Παρακαλώ απαντήστε με ΝΑΙ ή ΟΧΙ");
             }
         }
     }
@@ -448,6 +448,14 @@ class Scenarios {
         System.out.println();
 
         showMinistryRevenuesWithCodes(ministry);
+
+        List<BudgetEntry> ministryEntries = modifiedEntries.stream()
+            .filter(e -> ministry.equals(e.ministry) && "Έσοδα".equals(e.type))
+            .collect(Collectors.toList());
+            
+            if (ministryEntries.isEmpty()) {
+                return;
+            }
         
         System.out.print("Εισάγετε τον κωδικό του εσόδου που θέλετε να αλλάξετε: ");
         String code = scanner.nextLine().trim();
