@@ -40,7 +40,7 @@
                      <plugin>
                      <groupId>org.openjfx</groupId>
                      <artifactId>javafx-maven-plugin</artifactId>
-                     <version>0.1.0</version>
+                     <version>0.0.8</version>
                      <executions>
                               <execution>
                                        <id>default-cli</id>
@@ -53,6 +53,7 @@
             </plugins>
    </build>
 </project>
+
 
 
 
