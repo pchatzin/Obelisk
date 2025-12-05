@@ -404,7 +404,9 @@ class Scenarios {
 
         System.out.printf("Επιτυχής αλλαγή ! Το έσοδο %s άλλαξε από %,d € σε %,d €%n",
             code, currentAmount, newAmount);
-     }
+
+            showAllUpdatedData();
+    }
 
      private void changeExpenseByCode() {
         System.out.println();
@@ -442,6 +444,8 @@ class Scenarios {
         
         System.out.printf("Επιτυχής αλλαγή! Το έξοδο %s άλλαξε από %,d € σε %,d €%n", 
          code, currentAmount, newAmount);
+
+         showAllUpdatedData();
     }
 
     private void changeMinistryRevenueByCode(String ministry) {
@@ -553,6 +557,8 @@ class Scenarios {
         modifiedEntries.add(newRevenue);
 
         System.out.printf("Προστέθηκε νέο έσοδο: %s %s - %,d €%n", code, description, amount);
+
+        showAllUpdatedData();
     }
 
 
@@ -589,6 +595,8 @@ class Scenarios {
         modifiedEntries.add(newExpense);
         
         System.out.printf("Προστέθηκε νέο έξοδο: %s %s - %s - %,d €%n", code, description, ministry, amount);
+
+        showAllUpdatedData();
     }
 
 
@@ -802,5 +810,50 @@ class Scenarios {
      }
     return sb.toString();
   }
+
+    private void showAllUpdatedData() {
+
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("ΕΝΗΜΕΡΩΜΕΝΑ ΔΕΔΟΜΕΝΑ");
+        System.out.println("=".repeat(60));
+        System.out.println("\nΕΣΟΔΑ:");
+
+        showRevenueWithCodes();
+    
+        System.out.println("\n" + "-".repeat(80));
+        System.out.println("\nΕΞΟΔΑ ΑΝΑ ΥΠΟΥΡΓΕΙΟ:");
+
+        Map<String, Long> expensesByMinistry = new HashMap<>();
+        long totalExpenses = 0L;
+
+        for (BudgetEntry e : modifiedEntries) {
+            if (!"Έξοδα".equals(e.type)) continue;
+
+            String ministry = (e.ministry == null || e.ministry.isEmpty()) ? "-" : e.ministry;
+            expensesByMinistry.merge(ministry, e.amount, Long::sum);
+            totalExpenses += e.amount;
+        }
+
+        List<Map.Entry<String, Long>> list = new ArrayList<>(expensesByMinistry.entrySet());
+        list.sort(Map.Entry.comparingByKey());
+
+        for (Map.Entry<String, Long> e : list) {
+            System.out.printf("- %-50s %,15d €%n", e.getKey(), e.getValue());
+        }
+
+        long totalRevenue = modifiedEntries.stream()
+            .filter(entry -> "Έσοδα".equals(entry.type))
+            .mapToLong(entry -> entry.amount)
+            .sum();
+    
+        long balance = totalRevenue - totalExpenses;
+    
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("ΤΕΛΙΚΟ ΑΠΟΤΕΛΕΣΜΑ ΜΕ ΜΕΤΑΒΛΗΤΕΣ:");
+        System.out.printf("Σύνολο Εσόδων:  %,20d €%n", totalRevenue);
+        System.out.printf("Σύνολο Εξόδων:  %,20d €%n", totalExpenses);
+        System.out.printf("Ισοζύγιο:       %,20d €%n", balance);
+        System.out.println("=".repeat(60));
+    }
 } 
 
