@@ -226,20 +226,16 @@ class Scenarios {
 
         System.out.println();
         System.out.println("Επιλογές για " + selectedMinistry + ":");
-        System.out.println("1.Αλλαγή εσόδου με βάση τον κωδικό");
-        System.out.println("2.Αλλαγή εξόδου με βάση τον κωδικό");
-        System.out.println("3.Μεταφορά εξόδων από ή προς άλλο υπουργείο");
+        System.out.println("1.Αλλαγή εξόδου με βάση τον κωδικό");
+        System.out.println("2.Μεταφορά εξόδων από ή προς άλλο υπουργείο");
 
         int choice = getMenuChoice(1, 3);
 
         switch (choice) {
             case 1:
-                changeMinistryRevenueByCode(selectedMinistry);
-                break;
-            case 2:
                 changeMinistryExpenseByCode(selectedMinistry);
                 break;
-            case 3:
+            case 2:
                 transferExpenses(selectedMinistry);
                 break;
         }
@@ -306,40 +302,6 @@ class Scenarios {
             System.out.printf("%-10s %-50s %-30s %,15d%n", code, description, ministry, amount);
         }
     }
-
-     private void showMinistryRevenuesWithCodes(String ministry) {
-        List<BudgetEntry> ministryEntries = modifiedEntries.stream()
-                .filter(e -> ministry.equals(e.ministry) && "Έσοδα".equals(e.type))
-                .collect(Collectors.toList());
-                
-        if (ministryEntries.isEmpty()) {
-            System.out.println("Δεν βρέθηκαν έσοδα για το υπουργείο: " + ministry);
-            return;
-        }
-
-        
-        long totalRevenue = ministryEntries.stream()
-                .mapToLong(e -> e.amount)
-                .sum();
-                
-        System.out.println();
-        System.out.println("ΕΣΟΔΑ ΓΙΑ ΥΠΟΥΡΓΕΙΟ: " + ministry);
-        System.out.printf("Σύνολο: %,d €%n", totalRevenue);
-        System.out.println();
-        System.out.printf("%-10s %-60s %15s%n", "ΚΩΔΙΚΟΣ", "ΠΕΡΙΓΡΑΦΗ", "ΠΟΣΟ (€)");
-        System.out.println("-------------------------------------------------------------------------");
-
-        Map<String, List<BudgetEntry>> revenueByCode = ministryEntries.stream()
-                .filter((BudgetEntry e) -> e.code != null && !e.code.isEmpty())
-                .collect(Collectors.groupingBy((BudgetEntry e) -> e.code));
-
-        for (Map.Entry<String, List<BudgetEntry>> entry : revenueByCode.entrySet()) {
-            String code = entry.getKey();
-            long amount = entry.getValue().stream().mapToLong(e -> e.amount).sum();
-            String description = entry.getValue().get(0).source.replace(code, "").trim();
-            System.out.printf("%-10s %-60s %,15d%n", code, description, amount);
-        }
-     }
 
      private void showMinistryExpensesWithCodes(String ministry) {
         List<BudgetEntry> ministryEntries = modifiedEntries.stream()
@@ -447,56 +409,6 @@ class Scenarios {
 
          showAllUpdatedData();
     }
-
-    private void changeMinistryRevenueByCode(String ministry) {
-        System.out.println();
-
-        showMinistryRevenuesWithCodes(ministry);
-
-        List<BudgetEntry> ministryEntries = modifiedEntries.stream()
-            .filter(e -> ministry.equals(e.ministry) && "Έσοδα".equals(e.type))
-            .collect(Collectors.toList());
-            
-            if (ministryEntries.isEmpty()) {
-                return;
-            }
-        
-        System.out.print("Εισάγετε τον κωδικό του εσόδου που θέλετε να αλλάξετε: ");
-        String code = scanner.nextLine().trim();
-
-        List<BudgetEntry> revenueEntries = modifiedEntries.stream()
-                .filter(e -> "Έσοδα".equals(e.type) && code.equals(e.code) && ministry.equals(e.ministry))
-                .collect(Collectors.toList());
-        
-        if (revenueEntries.isEmpty()) {
-            System.out.println("Δεν βρέθηκε έσοδο με κωδικό: " + code + " για το υπουργείο: " + ministry);
-            return;
-        }
-
-
-        long currentAmount = revenueEntries.stream().mapToLong(e -> e.amount).sum();
-        String description = revenueEntries.get(0).source.replace(code, "").trim();
-        
-        System.out.printf("Τρέχον έσοδο: %s - %s - %,d €%n", code, description, currentAmount);
-        System.out.print("Εισάγετε το νέο ποσό (€): ");
-        long newAmount = getAmountFromUser();
-
-
-        modifiedEntries.removeAll(revenueEntries);
-        
-        BudgetEntry updatedRevenue = new BudgetEntry();
-        updatedRevenue.type = "Έσοδα";
-        updatedRevenue.amount = newAmount;
-        updatedRevenue.ministry = ministry;
-        updatedRevenue.source = code + " " + description;
-        updatedRevenue.code = code;
-        
-        modifiedEntries.add(updatedRevenue);
-
-         System.out.printf("Επιτυχής αλλαγή! Το έσοδο %s του %s άλλαξε από %,d € σε %,d €%n", 
-          code, ministry, currentAmount, newAmount);
-    }
-
 
     private void changeMinistryExpenseByCode(String ministry) {
         System.out.println();
