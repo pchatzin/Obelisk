@@ -152,30 +152,48 @@ public class GUI {
     VBox menuBox = new VBox(40);
     menuBox.setAlignment(Pos.TOP_LEFT);
     menuBox.setPadding(new Insets(60, 80, 60, 80));
-
-    String[] menuItems = {
-        "Budget", "Analysis", "Scenario",
-        "Execution", "Multiple Year Operations", "Country Comparison"
-    };
-
+    
     VBox buttonsColumn = new VBox(30);
 
-    for (String name : menuItems) {
-        Button b = new Button(name);
-        b.setFont(Font.font("Arial", 40));
-        b.setPrefWidth(800);
-        b.setAlignment(Pos.CENTER_LEFT);
-        b.setPadding(new Insets(15, 20, 15, 20));
-        b.setStyle("-fx-background-color: #003476; -fx-text-fill: white;");
+    // κουμπί Budget Analysis
+    buttonsColumn.getChildren().add(
+        createMenuButton(
+        "Budget Analysis",
+        "/GUI/button1.png",
+        e -> primaryStage.setScene(createBudgetPage(primaryStage))
+    )
+);
 
-        // αργότερα εδώ θα βάλεις το navigation σε νέες σελίδες
-        b.setOnAction(e -> System.out.println(name + " clicked"));
+// κουμπί Scenario Execution
+buttonsColumn.getChildren().add(
+    createMenuButton(
+        "Scenario Execution",
+        "/GUI/button4.png",
+        e -> primaryStage.setScene(createScenarioPage(primaryStage))
+    )
+);
 
-        buttonsColumn.getChildren().add(b);
-    }
+// κουμπί Multiple Year Operations
+buttonsColumn.getChildren().add(
+    createMenuButton(
+        "Multiple Year Operations",
+        "/GUI/button3.png",
+        e -> primaryStage.setScene(createMultiplePage(primaryStage))
+    )
+);
 
-    menuBox.getChildren().add(buttonsColumn);
-    root.setCenter(menuBox);
+// κουμπί Country Comparison
+buttonsColumn.getChildren().add(
+    createMenuButton(
+        "Country Comparison",
+        "/GUI/button2.png",
+        e -> primaryStage.setScene(createCountryPage(primaryStage))
+    )
+);
+
+menuBox.getChildren().add(buttonsColumn);
+root.setCenter(menuBox);
+
 
     // Footer
     VBox footerBox = new VBox(10);
@@ -197,5 +215,52 @@ public class GUI {
     root.setBottom(footerBox);
 
     return new Scene(root, 1200, 800);
+   }
+
+   private Scene createBudgetPage(Stage stage) {
+    BorderPane root = new BorderPane();
+    root.setStyle("-fx-background-color: white;");
+    root.setCenter(new Label("Budget Analysis Page"));
+    return new Scene(root, 1200, 800);
+   }
+
+   private Scene createScenarioPage(Stage stage) {
+    BorderPane root = new BorderPane();
+    root.setStyle("-fx-background-color: white;");
+    root.setCenter(new Label("Scenario Execution Page"));
+    return new Scene(root, 1200, 800);
+   }
+
+   private Scene createMultiplePage(Stage stage) {
+    BorderPane root = new BorderPane();
+    root.setStyle("-fx-background-color: white;");
+    root.setCenter(new Label("Multiple Year Operations Page"));
+    return new Scene(root, 1200, 800);
+   }
+
+   private Scene createCountryPage(Stage stage) {
+    BorderPane root = new BorderPane();
+    root.setStyle("-fx-background-color: white;");
+    root.setCenter(new Label("Country Comparison Page"));
+    return new Scene(root, 1200, 800);
+   }
+
+   
+   private Button createMenuButton(String text, String iconPath, javafx.event.EventHandler<javafx.event.ActionEvent> action) {
+
+    ImageView icon = new ImageView(new Image(getClass().getResourceAsStream(iconPath)));
+    icon.setFitHeight(70);
+    icon.setPreserveRatio(true);
+
+    Button b = new Button(text, icon);
+    b.setFont(Font.font("Arial", 40));
+    b.setPrefWidth(900);
+    b.setAlignment(Pos.CENTER_LEFT);
+    b.setPadding(new Insets(10, 20, 10, 20));
+    b.setStyle("-fx-background-color: #003476; -fx-text-fill: white;");
+
+    b.setOnAction(action);
+
+    return b;
    }
 }
