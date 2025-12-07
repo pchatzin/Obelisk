@@ -148,51 +148,34 @@ public class GUI {
     header.getChildren().addAll(logoView, titleBox);
     root.setTop(header);
 
-    // MAIN MENU BUTTONS
-    VBox menuBox = new VBox(40);
-    menuBox.setAlignment(Pos.TOP_LEFT);
-    menuBox.setPadding(new Insets(60, 80, 60, 80));
-    
-    VBox buttonsColumn = new VBox(30);
+    // GRID ΜΕ 2 ΓΡΑΜΜΕΣ – 3 ΣΤΗΛΕΣ
+    VBox menuGrid = new VBox(40);
+    menuGrid.setAlignment(Pos.CENTER);
+    menuGrid.setPadding(new Insets(60, 80, 60, 80));
 
-    // κουμπί Budget Analysis
-    buttonsColumn.getChildren().add(
-        createMenuButton(
-        "Budget Analysis",
-        "/GUI/button1.png",
-        e -> primaryStage.setScene(createBudgetPage(primaryStage))
-    )
-);
+    HBox row1 = new HBox(40);
+    row1.setAlignment(Pos.CENTER_LEFT);
 
-// κουμπί Scenario Execution
-buttonsColumn.getChildren().add(
-    createMenuButton(
-        "Scenario Execution",
-        "/GUI/button4.png",
-        e -> primaryStage.setScene(createScenarioPage(primaryStage))
-    )
-);
+    row1.getChildren().addAll(
+        createMenuButton("Budget Analysis", "/GUI/button1.png", 
+        e -> primaryStage.setScene(createBudgetPage(primaryStage))),
+        createMenuButton("Scenario Execution", "/GUI/button4.png", 
+        e -> primaryStage.setScene(createScenarioPage(primaryStage))),
+        createMenuButton("Multiple Year Operations", "/GUI/button3.png", 
+        e -> primaryStage.setScene(createMultiplePage(primaryStage)))
+    );
 
-// κουμπί Multiple Year Operations
-buttonsColumn.getChildren().add(
-    createMenuButton(
-        "Multiple Year Operations",
-        "/GUI/button3.png",
-        e -> primaryStage.setScene(createMultiplePage(primaryStage))
-    )
-);
+    HBox row2 = new HBox(40);
+    row2.setAlignment(Pos.CENTER_LEFT);
 
-// κουμπί Country Comparison
-buttonsColumn.getChildren().add(
-    createMenuButton(
-        "Country Comparison",
-        "/GUI/button2.png",
-        e -> primaryStage.setScene(createCountryPage(primaryStage))
-    )
-);
+    row2.getChildren().add(
+        createMenuButton("Country Comparison", "/GUI/button2.png", 
+        e -> primaryStage.setScene(createCountryPage(primaryStage)))
+    );
 
-menuBox.getChildren().add(buttonsColumn);
-root.setCenter(menuBox);
+    menuGrid.getChildren().addAll(row1, row2);
+    root.setCenter(menuGrid);
+
 
 
     // Footer
@@ -245,22 +228,22 @@ root.setCenter(menuBox);
     return new Scene(root, 1200, 800);
    }
 
-   
    private Button createMenuButton(String text, String iconPath, javafx.event.EventHandler<javafx.event.ActionEvent> action) {
 
     ImageView icon = new ImageView(new Image(getClass().getResourceAsStream(iconPath)));
-    icon.setFitHeight(70);
+    icon.setFitHeight(100);
     icon.setPreserveRatio(true);
 
     Button b = new Button(text, icon);
-    b.setFont(Font.font("Arial", 40));
-    b.setPrefWidth(900);
+    b.setFont(Font.font("Arial", 36));
+    b.setPrefWidth(500);
     b.setAlignment(Pos.CENTER_LEFT);
     b.setPadding(new Insets(10, 20, 10, 20));
-    b.setStyle("-fx-background-color: #003476; -fx-text-fill: white;");
+
+    b.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #1a8080; -fx-border-color: #1a8080; -fx-border-width: 2;");
 
     b.setOnAction(action);
 
     return b;
    }
-}
+ }
