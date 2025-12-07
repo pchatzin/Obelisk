@@ -1,53 +1,64 @@
 @startuml
-title Obelisk Project UML Diagram (Analysis Branch)
+title Obelisk Program Analysis branch
+
+package budget {
+  class "budget-2020.csv"
+  class "budget-2021.csv"
+  class "budget-2022.csv"
+  class "budget-2023.csv"
+  class "budget-2024.csv"
+  class "budget-2025.csv"
+}
+
+package countries {
+  class "Country_comp.csv"
+}
+
+package docs {
+  class "Ex guide.docx"
+  class "KED-Odigos-Ylopoiisis-gia-Paroxous-WS_v0_90.pdf"
+  class "KED_client_specs_v1.5_0.pdf"
+  class "README.md"
+  class "exer.txt"
+  class "tech-report.md"
+}
+
+class pom.xml
+class promo
 
 package com.obelisk {
-  class ObeliskApplication {
-    +main(String[] args)
-  }
+  class ObeliskApplication
+  class BudgetAnalyzer
+  class "BudgetAnalyzer$Entry"
+  class "BudgetAnalyzer$Category"
+  class CountryComp
+  class YearComp
+  class exceltocsv
 
-  class BudgetAnalyzer {
-    +analyze()
-    +run()
-  }
-
-  class "BudgetAnalyzer$Entry" {
-    +String type
-    +long amount
-    +String ministry
-    +String source
-    +String code
-  }
-
-  class "BudgetAnalyzer$Category" {
-    +String name
+  package budget_db {
+    class BudgetEntry
+    class BudgetEntryRepository
+    class BudgetImporter
+    class PdfBudgetParser
   }
 }
 
-package com.obelisk.budget_db {
-  class BudgetEntry {
-    +String code
-    +String description
-    +long amount
-    +String ministry
-  }
-
-  class BudgetEntryRepository {
-    +save(BudgetEntry)
-    +findByCode(String)
-  }
-
-  class BudgetImporter {
-    +importCSV(String file)
-    +importPDF(String file)
-  }
-
-  class PdfBudgetParser {
-    +parse(String file)
-  }
+package resources {
+  class "Country comp.xlsx"
+  class application.properties
+  class "budget-2020.pdf"
+  class "budget-2021.pdf"
+  class "budget-2022.pdf"
+  class "budget-2023.pdf"
+  class "budget-2024.pdf"
+  class "budget-2025.pdf"
 }
 
-' Relationships
+package test.resources {
+  class "(test data)"
+}
+
+' Relationships (example links)
 ObeliskApplication --> BudgetAnalyzer : uses
 BudgetAnalyzer --> "BudgetAnalyzer$Entry" : contains
 BudgetAnalyzer --> "BudgetAnalyzer$Category" : categorizes
@@ -55,5 +66,11 @@ BudgetAnalyzer --> BudgetEntry : analyzes
 BudgetImporter --> BudgetEntry : creates
 BudgetImporter --> PdfBudgetParser : uses
 BudgetEntryRepository --> BudgetEntry : manages
+exceltocsv --> "budget-2020.csv" : converts
+exceltocsv --> "budget-2021.csv" : converts
+exceltocsv --> "budget-2022.csv" : converts
+exceltocsv --> "budget-2023.csv" : converts
+exceltocsv --> "budget-2024.csv" : converts
+exceltocsv --> "budget-2025.csv" : converts
 
 @enduml
