@@ -1,59 +1,75 @@
 @startuml
-title Obelisk Project UML Diagram
+title Obelisk Project UML Diagram (Budget Branch)
+
+package budget {
+  class "budget2025.csv" as Budget2025Csv
+}
+
+package docs {
+  class "Ex guide.docx" as ExGuideDocx
+  class "KED-Odigos-Ylopoiisis-gia-Paroxous-WS_v0_90.pdf" as KedWsPdf
+  class "KED_client_specs_v1.5_0.pdf" as KedClientSpecsPdf
+  class "README.md" as ReadmeMd
+  class "exer.txt" as ExerTxt
+  class "tech-report.md" as TechReportMd
+}
+
+class "pom.xml" as PomXml
+class promo
 
 package com.obelisk {
-  class ObeliskApplication {
-    +main(String[] args)
-  }
+  class ObeliskApplication
+  class BudgetAnalyzer
+  class "BudgetAnalyzer$Entry" as BudgetAnalyzerEntry
+  class "BudgetAnalyzer$Category" as BudgetAnalyzerCategory
 
-  class BudgetAnalyzer {
-    +analyze()
-    +run()
-  }
-
-  class BudgetAnalyzer$Entry {
-    +String type
-    +long amount
-    +String ministry
-    +String source
-    +String code
-  }
-
-  class BudgetAnalyzer$Category {
-    +String name
+  package budget_db {
+    class BudgetEntry
+    class BudgetEntryRepository
+    class BudgetImporter
+    class PdfBudgetParser
   }
 }
 
-package com.obelisk.budget_db {
-  class BudgetEntry {
-    +String code
-    +String description
-    +long amount
-    +String ministry
-  }
+package resources {
+  class "application.properties" as AppPropsRes
+  class "budget-2025.pdf" as Budget2025PdfRes
+}
 
-  class BudgetEntryRepository {
-    +save(BudgetEntry)
-    +findByCode(String)
-  }
+package "target.classes" {
+  class "application.properties" as AppPropsTarget
+  class "budget-2025.pdf" as Budget2025PdfTarget
 
-  class BudgetImporter {
-    +importCSV(String file)
-    +importPDF(String file)
-  }
+  package com.obelisk {
+    class "ObeliskApplication.class" as ObeliskApplicationClass
+    class "BudgetAnalyzer.class" as BudgetAnalyzerClass
+    class "BudgetAnalyzer$Entry.class" as BudgetAnalyzerEntryClass
+    class "BudgetAnalyzer$Category.class" as BudgetAnalyzerCategoryClass
 
-  class PdfBudgetParser {
-    +parse(String file)
+    package budget_db {
+      class "BudgetEntry.class" as BudgetEntryClass
+      class "BudgetEntryRepository.class" as BudgetEntryRepositoryClass
+      class "BudgetImporter.class" as BudgetImporterClass
+      class "PdfBudgetParser.class" as PdfBudgetParserClass
+      class "PdfBudgetParser$BoldOnlyTextStripper.class" as BoldOnlyTextStripperClass
+    }
   }
 }
 
-' Relationships
+package uml {
+  class "budget.puml" as BudgetPuml
+  class "budget.png" as BudgetPng
+}
+
+' Relationships (logical)
 ObeliskApplication --> BudgetAnalyzer : uses
-BudgetAnalyzer --> BudgetAnalyzer$Entry : contains
-BudgetAnalyzer --> BudgetAnalyzer$Category : categorizes
+BudgetAnalyzer --> BudgetAnalyzerEntry : contains
+BudgetAnalyzer --> BudgetAnalyzerCategory : categorizes
 BudgetAnalyzer --> BudgetEntry : analyzes
 BudgetImporter --> BudgetEntry : creates
-BudgetImporter --> PdfBudgetParser : uses
+BudgetImporter --> PdfBudgetParser : parses
 BudgetEntryRepository --> BudgetEntry : manages
+PdfBudgetParser --> Budget2025PdfRes : reads
+BudgetImporter --> Budget2025Csv : imports
 
 @enduml
