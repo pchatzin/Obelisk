@@ -1,0 +1,44 @@
+@startuml
+title Obelisk Project UML Diagram (GUI Branch)
+
+package com.obelisk {
+  class Main
+  class GUI
+}
+
+package resources.GUI {
+  class "GUI_Guidelines.pdf" as GuiGuidelinesPdf
+  class "Obelisk.pdf" as ObeliskPdf
+  class "button1.png" as Button1Png
+  class "button2.png" as Button2Png
+  class "button3.png" as Button3Png
+  class "button4.png" as Button4Png
+  class "logo.png" as LogoPng
+}
+
+package target.classes.com.obelisk {
+  class "Main.class" as MainClass
+  class "GUI.class" as GuiClass
+}
+
+package target.classes.GUI {
+  class "GUI_Guidelines.pdf" as GuiGuidelinesPdfTarget
+  class "Obelisk.pdf" as ObeliskPdfTarget
+  class "button1.png" as Button1PngTarget
+  class "button2.png" as Button2PngTarget
+  class "button3.png" as Button3PngTarget
+  class "button4.png" as Button4PngTarget
+  class "logo.png" as LogoPngTarget
+}
+
+' Relationships
+Main --> GUI : launches
+GUI --> GuiGuidelinesPdf : references
+GUI --> ObeliskPdf : references
+GUI --> Button1Png : uses
+GUI --> Button2Png : uses
+GUI --> Button3Png : uses
+GUI --> Button4Png : uses
+GUI --> LogoPng : displays
+
+@enduml
