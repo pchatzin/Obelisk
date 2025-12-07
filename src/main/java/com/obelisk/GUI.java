@@ -240,7 +240,7 @@ public class GUI {
     b.setAlignment(Pos.CENTER_LEFT);
     b.setPadding(new Insets(10, 20, 10, 20));
 
-    b.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #1a8080; -fx-border-color: #1a8080; -fx-border-width: 2;");
+    b.setStyle("-fx-background-color: #f5f8fb; -fx-text-fill: #1a8080; -fx-border-color: #1a8080; -fx-border-width: 2;");
 
     b.setOnAction(action);
 
