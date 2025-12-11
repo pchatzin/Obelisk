@@ -1,0 +1,58 @@
+@startuml
+title Obelisk Project UML Diagram (Scenarios Branch)
+
+package com.obelisk {
+  class ObeliskApplication
+  class BudgetAnalyzer
+  class "BudgetAnalyzer$Entry" as BudgetAnalyzerEntry
+  class "BudgetAnalyzer$Category" as BudgetAnalyzerCategory
+  class BudgetEntry
+  class Scenarios
+
+  package budget_db {
+    class BudgetEntry
+    class BudgetEntryRepository
+    class BudgetImporter
+    class PdfBudgetParser
+  }
+}
+
+package resources {
+  class "application.properties" as AppPropsRes
+  class "budget-2025.pdf" as Budget2025PdfRes
+}
+
+package test.display.charts {
+  class "ChartTest" as ChartTest
+}
+
+package target.classes.com.obelisk {
+  class ObeliskApplication.class
+  class BudgetAnalyzer.class
+  class "BudgetAnalyzer$Entry.class" as BudgetAnalyzerEntryClass
+  class "BudgetAnalyzer$Category.class" as BudgetAnalyzerCategoryClass
+  class BudgetEntry.class
+  class Scenarios.class
+
+  package budget_db {
+    class BudgetEntry.class
+    class BudgetEntryRepository.class
+    class BudgetImporter.class
+    class PdfBudgetParser.class
+    class "PdfBudgetParser$BoldOnlyTextStripper.class" as BoldOnlyTextStripperClass
+  }
+}
+
+' Relationships (logical)
+ObeliskApplication --> BudgetAnalyzer : uses
+BudgetAnalyzer --> BudgetAnalyzerEntry : contains
+BudgetAnalyzer --> BudgetAnalyzerCategory : categorizes
+BudgetAnalyzer --> BudgetEntry : analyzes
+BudgetImporter --> BudgetEntry : creates
+BudgetImporter --> PdfBudgetParser : parses
+BudgetEntryRepository --> BudgetEntry : manages
+Scenarios --> BudgetAnalyzer : runs scenarios
+Scenarios --> BudgetEntry : evaluates
+ChartTest --> Scenarios : tests
+
+@enduml

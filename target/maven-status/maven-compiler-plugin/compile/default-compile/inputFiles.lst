@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/budget_db/BudgetEntry.java
 /mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/budget_db/BudgetEntryRepository.java
 /mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/budget_db/BudgetImporter.java
@@ -5,6 +6,9 @@
 /mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/com/obelisk/BudgetAnalyzer.java
 /mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/com/obelisk/GUI.java
 /mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/com/obelisk/Main.java
+=======
+/mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/com/obelisk/BudgetAnalyzer.java
+>>>>>>> scenarios
 /mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/com/obelisk/ObeliskApplication.java
 /mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/com/obelisk/budget_db/BudgetEntry.java
 /mnt/c/Users/pinec/Desktop/Obelisk/src/main/java/com/obelisk/budget_db/BudgetEntryRepository.java

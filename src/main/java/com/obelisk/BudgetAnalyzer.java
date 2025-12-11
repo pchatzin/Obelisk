@@ -6,7 +6,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 
 /**
  *  Διαβάζει το budget2025.csv και:
@@ -336,10 +344,15 @@ public class BudgetAnalyzer {
         System.out.printf("%-20s %-76s %-60s%n", "ΠΟΣΟ (€)", "ΥΠΟΥΡΓΕΙΟ / ΦΟΡΕΑΣ", "ΠΗΓΗ");
         System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
+        long sum = 0L;
         for (Entry e : result) {
             String ministry = (e.ministry == null || e.ministry.isEmpty()) ? "-" : e.ministry;
             System.out.printf("%-20d %-76s %-60s%n", e.amount, ministry, e.source);
+            sum += e.amount;
         }
+
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-20s %-76s %-60d%n", "ΣΥΝΟΛΟ", "", sum);
     }
 
     /**

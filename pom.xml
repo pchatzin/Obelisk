@@ -90,19 +90,14 @@
 
     <build>
         <plugins>
+            <!-- Spring Boot Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.5.7</version>
                 <configuration>
-                <mainClass>com.obelisk.ObeliskApplication</mainClass>
+                    <mainClass>com.obelisk.ObeliskApplication</mainClass>
                 </configuration>
-            </plugin>
-            
-            <!-- Spring Boot Plugin -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
             <!-- Maven Surefire Plugin -->
