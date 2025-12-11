@@ -1,6 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.obelisk</groupId>
@@ -10,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.5.7</version>
         <relativePath/>
     </parent>
 
@@ -19,33 +20,32 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Boot Core -->
+        <!-- Spring Boot core -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Spring Boot Web (activates embedded Tomcat) -->
+        <!-- Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Spring Data JPA -->
+        <!-- JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- H2 Database -->
+        <!-- H2 runtime -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.200</version>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Jakarta Servlet API (required for H2 Console in Spring Boot 3.x) -->
+        <!-- Servlet API (needed for H2 console in Spring Boot 3.x) -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -53,41 +53,39 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Apache PDFBox -->
+        <!-- PDFBox -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.29</version>
+            <version>2.0.35</version>
         </dependency>
 
-        <!-- JUnit 5 -->
+        <!-- Spring Boot testing (includes JUnit 5) -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.9.3</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-         <dependency>
-                  <groupId>org.openjfx</groupId>
-                  <artifactId>javafx-controls</artifactId>
-                  <version>21.0.2</version>
-                  <classifier>win</classifier>
-         </dependency>
-
-         <dependency>
-                  <groupId>org.openjfx</groupId>
-                  <artifactId>javafx-fxml</artifactId>
-                  <version>21.0.2</version>
-                  <classifier>win</classifier>
-         </dependency>
-
-         <dependency>
-                  <groupId>org.openjfx</groupId>
-                  <artifactId>javafx-graphics</artifactId>
-                  <version>21.0.2</version>
-                  <classifier>win</classifier>
-         </dependency>
+        <!-- JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>21.0.2</version>
+            <classifier>win</classifier>
+        </dependency>
     </dependencies>
 
     <build>
@@ -105,17 +103,15 @@
                 <version>3.1.2</version>
             </plugin>
 
+            <!-- JavaFX Maven Plugin -->
             <plugin>
-                  <groupId>org.openjfx</groupId>
-                  <artifactId>javafx-maven-plugin</artifactId>
-                  <version>21.0.2</version>
-                  <configuration>
-                           <mainClass>com.Obelisk.GUI</mainClass>
-                  </configuration>
-          </plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>21.0.2</version>
+                <configuration>
+                    <mainClass>com.Obelisk.GUI</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
-
-
-
