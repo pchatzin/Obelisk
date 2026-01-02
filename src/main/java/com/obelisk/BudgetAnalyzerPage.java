@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package com.obelisk;
 
 import javafx.geometry.Insets;
@@ -82,6 +81,3 @@ public class BudgetAnalyzerPage {
         return new Scene(root, 1200, 800);
     }
 }
-=======
-
->>>>>>> db4275d2c6009b4a5651069673b8557eaf9923be
