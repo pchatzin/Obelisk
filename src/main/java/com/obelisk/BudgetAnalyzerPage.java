@@ -19,7 +19,7 @@ public class BudgetAnalyzerPage {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #f5f8fb;");
 
-        /* ================= HEADER ================= */
+        // HEADER
         HBox header = new HBox();
         header.setAlignment(Pos.CENTER_LEFT);
         header.setPadding(new Insets(30, 60, 30, 60));
@@ -28,11 +28,11 @@ public class BudgetAnalyzerPage {
         Label title = new Label("Budget Analysis");
         title.setFont(Font.font("Arial", 48));
         title.setTextFill(Color.web("#f5f8fb"));
-
         header.getChildren().add(title);
+
         root.setTop(header);
 
-        /* ================= CENTER CONTENT ================= */
+        // CENTER
         VBox content = new VBox(30);
         content.setPadding(new Insets(60));
         content.setAlignment(Pos.TOP_LEFT);
@@ -42,26 +42,14 @@ public class BudgetAnalyzerPage {
                 "view reports and process financial information."
         );
         description.setFont(Font.font("Arial", 28));
-        description.setTextFill(Color.web("#363636"));
 
         Button analyzeButton = new Button("Run Budget Analysis");
         analyzeButton.setFont(Font.font("Arial", 24));
-        analyzeButton.setStyle(
-                "-fx-background-color: #1a8080; " +
-                "-fx-text-fill: white; " +
-                "-fx-padding: 10 20 10 20;"
-        );
-
-        analyzeButton.setOnAction(e -> {
-            // Εδώ ΑΡΓΟΤΕΡΑ μπορείς να καλέσεις
-            // τον παλιό BudgetAnalyzer (λογική / υπολογισμούς)
-            System.out.println("Budget analysis started...");
-        });
 
         content.getChildren().addAll(description, analyzeButton);
         root.setCenter(content);
 
-        /* ================= FOOTER ================= */
+        // FOOTER
         HBox footer = new HBox();
         footer.setAlignment(Pos.CENTER_LEFT);
         footer.setPadding(new Insets(20, 60, 20, 60));
@@ -71,11 +59,10 @@ public class BudgetAnalyzerPage {
         backButton.setFont(Font.font("Arial", 20));
 
         backButton.setOnAction(e -> {
-             GUI gui = new GUI();
-             primaryStage.setScene(gui.createSecondScene(primaryStage));
+            GUI gui = new GUI();
+            primaryStage.setScene(gui.createSecondScene(primaryStage));
         });
-        
-        
+
         footer.getChildren().add(backButton);
         root.setBottom(footer);
 
