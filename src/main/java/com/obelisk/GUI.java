@@ -77,7 +77,6 @@ public class GUI {
         accessButton.setOnAction(e -> {
             Scene secondScene = createSecondScene(primaryStage);
             primaryStage.setScene(secondScene);
-            primaryStage.setFullScreen(true); 
         });
 
         centerContent.getChildren().addAll(title, description, accessButton);
@@ -102,7 +101,6 @@ public class GUI {
 
         Scene landingScene = new Scene(root, 1200, 800);
         primaryStage.setScene(landingScene);
-        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 
