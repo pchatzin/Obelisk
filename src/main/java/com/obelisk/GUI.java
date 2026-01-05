@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 public class GUI {
 
     public void start(Stage primaryStage) {
-        Scene blankScene = createBlankScene(primaryStage);
 
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #f5f8fb;");
@@ -77,6 +76,7 @@ public class GUI {
         accessButton.setOnAction(e -> {
             Scene secondScene = createSecondScene(primaryStage);
             primaryStage.setScene(secondScene);
+            primaryStage.show();
         });
 
         centerContent.getChildren().addAll(title, description, accessButton);
@@ -102,12 +102,6 @@ public class GUI {
         Scene landingScene = new Scene(root, 1200, 800);
         primaryStage.setScene(landingScene);
         primaryStage.show();
-    }
-
-    private Scene createBlankScene(Stage primaryStage) {
-        BorderPane blank = new BorderPane();
-        blank.setStyle("-fx-background-color: #ffffff;");
-        return new Scene(blank, 1200, 800);
     }
 
     private Scene createSecondScene(Stage primaryStage) {
