@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 public class GUI {
 
     public void start(Stage primaryStage) {
-        Scene blankScene = createBlankScene(primaryStage);
 
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #f5f8fb;");
@@ -106,11 +105,6 @@ public class GUI {
         primaryStage.show();
     }
 
-    private Scene createBlankScene(Stage primaryStage) {
-        BorderPane blank = new BorderPane();
-        blank.setStyle("-fx-background-color: #ffffff;");
-        return new Scene(blank, 1200, 800);
-    }
 
     private Scene createSecondScene(Stage primaryStage) {
 
@@ -157,8 +151,12 @@ public class GUI {
     row1.setAlignment(Pos.CENTER_LEFT);
 
     row1.getChildren().addAll(
-        createMenuButton("Budget Analysis", "/GUI/button1.png", 
-        e -> primaryStage.setScene(createBudgetPage(primaryStage))),
+        createMenuButton("Budget Analysis", "/GUI/button1.png",
+         e -> {
+             BudgetAnalyzerPage page = new BudgetAnalyzerPage();
+             primaryStage.setScene(page.createScene(primaryStage));
+            }
+        ),
         createMenuButton("Scenario Execution", "/GUI/button4.png", 
         e -> primaryStage.setScene(createScenarioPage(primaryStage))),
         createMenuButton("Multiple Year Operations", "/GUI/button3.png", 
@@ -200,12 +198,6 @@ public class GUI {
     return new Scene(root, 1200, 800);
    }
 
-   private Scene createBudgetPage(Stage stage) {
-    BorderPane root = new BorderPane();
-    root.setStyle("-fx-background-color: white;");
-    root.setCenter(new Label("Budget Analysis Page"));
-    return new Scene(root, 1200, 800);
-   }
 
    private Scene createScenarioPage(Stage stage) {
     BorderPane root = new BorderPane();
