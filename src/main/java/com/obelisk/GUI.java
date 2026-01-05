@@ -157,8 +157,14 @@ public class GUI {
     row1.setAlignment(Pos.CENTER_LEFT);
 
     row1.getChildren().addAll(
-        createMenuButton("Budget Analysis", "/GUI/button1.png", 
-        e -> primaryStage.setScene(createBudgetPage(primaryStage))),
+        createMenuButton(
+            "Budget Analysis",
+            "/GUI/button1.png",
+            e -> {
+                BudgetAnalyzerPage page = new BudgetAnalyzerPage();
+                primaryStage.setScene(page.createScene(primaryStage));
+            }
+        ),
         createMenuButton("Scenario Execution", "/GUI/button4.png", 
         e -> primaryStage.setScene(createScenarioPage(primaryStage))),
         createMenuButton("Multiple Year Operations", "/GUI/button3.png", 
