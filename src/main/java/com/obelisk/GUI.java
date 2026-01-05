@@ -112,7 +112,7 @@ public class GUI {
         return new Scene(blank, 1200, 800);
     }
 
-    public Scene createSecondScene(Stage primaryStage) {
+    public static Scene createSecondScene(Stage primaryStage) {
 
     BorderPane root = new BorderPane();
     root.setStyle("-fx-background-color: #f5f8fb;");
