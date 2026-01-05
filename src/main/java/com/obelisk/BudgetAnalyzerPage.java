@@ -14,6 +14,13 @@ import javafx.stage.Stage;
 
 public class BudgetAnalyzerPage {
 
+    private final GUI gui;   // ✅ Κρατάμε το ίδιο GUI
+
+    // ✅ Constructor
+    public BudgetAnalyzerPage(GUI gui) {
+        this.gui = gui;
+    }
+
     public Scene createScene(Stage primaryStage) {
 
         BorderPane root = new BorderPane();
@@ -28,8 +35,8 @@ public class BudgetAnalyzerPage {
         Label title = new Label("Budget Analysis");
         title.setFont(Font.font("Arial", 48));
         title.setTextFill(Color.web("#f5f8fb"));
-        header.getChildren().add(title);
 
+        header.getChildren().add(title);
         root.setTop(header);
 
         // CENTER
@@ -58,12 +65,10 @@ public class BudgetAnalyzerPage {
         Button backButton = new Button("← Back to Menu");
         backButton.setFont(Font.font("Arial", 20));
 
-        backButton.setOnAction(e -> {
-            GUI gui = new GUI();
-            primaryStage.setScene(gui.createSecondScene(primaryStage));
-        });
-
-
+        // ✅ ΕΠΙΣΤΡΟΦΗ ΣΤΟ MENU ΜΕ ΤΟ ΙΔΙΟ GUI
+        backButton.setOnAction(e ->
+                primaryStage.setScene(gui.createSecondScene(primaryStage))
+        );
 
         footer.getChildren().add(backButton);
         root.setBottom(footer);
