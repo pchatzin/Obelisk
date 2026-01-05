@@ -161,7 +161,7 @@ public class GUI {
             "Budget Analysis",
             "/GUI/button1.png",
             e -> {
-                BudgetAnalyzerPage page = new BudgetAnalyzerPage();
+                BudgetAnalyzerPage page = new BudgetAnalyzerPage(this);
                 primaryStage.setScene(page.createScene(primaryStage));
             }
         ),
