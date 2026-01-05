@@ -2,6 +2,7 @@ budget_db\BudgetImporter.class
 com\obelisk\BudgetAnalyzer.class
 com\obelisk\BudgetAnalyzer$Category.class
 com\obelisk\BudgetAnalyzer$Entry.class
+com\obelisk\BudgetAnalyzerPage.class
 budget_db\PdfBudgetParser.class
 budget_db\BudgetEntryRepository.class
 budget_db\BudgetEntry.class
