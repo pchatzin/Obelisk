@@ -71,10 +71,11 @@ public class BudgetAnalyzerPage {
         backButton.setFont(Font.font("Arial", 20));
 
         backButton.setOnAction(e -> {
-             primaryStage.setScene(new GUI().createSecondScene(primaryStage));
+             GUI gui = new GUI();
+             primaryStage.setScene(gui.createSecondScene(primaryStage));
         });
-
-
+        
+        
         footer.getChildren().add(backButton);
         root.setBottom(footer);
 
