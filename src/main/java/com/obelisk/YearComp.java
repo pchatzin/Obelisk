@@ -43,8 +43,10 @@ public class YearComp {
             }
 
             System.out.println();
+            scanner.nextLine(); 
             System.out.print("Θέλετε να κάνετε άλλη σύγκριση; (ΝΑΙ/ΟΧΙ): ");
-            String answer = scanner.next().trim().toUpperCase();
+            String answer = scanner.nextLine().trim().toUpperCase();
+
 
             if (answer.equals("ΝΑΙ")) {
                 continueComparison = true;
