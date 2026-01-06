@@ -1,0 +1,45 @@
+@startuml
+title Obelisk Project UML Diagram
+
+package com.obelisk {
+  class Main {
+    +main(String[] args)
+  }
+
+  class GUI {
+    +start(Stage primaryStage)
+    +initComponents()
+  }
+}
+
+package budget_db {
+  class BudgetEntry {
+    +String code
+    +String description
+    +long amount
+    +String ministry
+  }
+
+  class BudgetEntryRepository {
+    +save(BudgetEntry)
+    +findByCode(String)
+  }
+
+  class BudgetImporter {
+    +importCSV(String file)
+    +importPDF(String file)
+  }
+
+  class PdfBudgetParser {
+    +parse(String file)
+  }
+}
+
+' Relationships
+Main --> GUI : launches
+GUI --> BudgetEntryRepository : queries
+BudgetEntryRepository --> BudgetEntry : manages
+BudgetImporter --> BudgetEntry : creates
+BudgetImporter --> PdfBudgetParser : uses
+
+@enduml
