@@ -2,11 +2,10 @@ package com.obelisk;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class YearComp {
@@ -20,13 +19,14 @@ public class YearComp {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        boolean continueComparison = true;
 
         System.out.println("==================================================");
         System.out.println("ΣΥΓΚΡΙΣΗ ΠΡΟΫΠΟΛΟΓΙΣΜΩΝ ΜΕΤΑΞΥ ΕΤΩΝ");
         System.out.println("Διαθέσιμα έτη: 2020 – 2025");
         System.out.println("==================================================");
 
-        while (true) {
+        while (continueComparison) {
 
             System.out.print("Δώστε πρώτο έτος (π.χ. 2020): ");
             int year1 = scanner.nextInt();
@@ -44,42 +44,26 @@ public class YearComp {
 
             System.out.println();
             System.out.print("Θέλετε να κάνετε άλλη σύγκριση; (ΝΑΙ/ΟΧΙ): ");
-            scanner.nextLine(); // καθαρίζει buffer
-            String answer = scanner.nextLine().trim().toUpperCase();
+            String answer = scanner.next().trim().toUpperCase();
 
-            if (answer.equals("ΟΧΙ")) {
+            if (answer.equals("ΝΑΙ")) {
+                continueComparison = true;
+            } else if (answer.equals("ΟΧΙ")) {
                 System.out.println("Το πρόγραμμα τερματίζει. Ευχαριστούμε!");
-                break;
-            } else if (!answer.equals("ΝΑΙ")) {
+                break; // ✅ ΤΟ ΜΟΝΟ ΠΟΥ ΧΡΕΙΑΖΟΤΑΝ
+            } else {
                 System.out.println("Παρακαλώ απαντήστε μόνο ΝΑΙ ή ΟΧΙ.");
             }
         }
-
-        scanner.close();
     }
 
-    // ============================================================
-    // ΦΟΡΤΩΣΗ ΔΕΔΟΜΕΝΩΝ ΕΤΟΥΣ
-    // ============================================================
-
     private static YearData loadYearData(int year) throws IOException {
-
-        String resourcePath = "budget/budget" + year + ".csv";
-
-        InputStream is = YearComp.class
-                .getClassLoader()
-                .getResourceAsStream(resourcePath);
-
-        if (is == null) {
-            throw new IOException("Δεν βρέθηκε το αρχείο: " + resourcePath);
-        }
+        Path path = Paths.get("budget", "budget-" + year + ".csv");
 
         long revenue = 0L;
         long expenses = 0L;
 
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(is, StandardCharsets.UTF_8))) {
-
+        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line;
             boolean first = true;
 
@@ -88,7 +72,6 @@ public class YearComp {
                 if (first) { first = false; continue; }
 
                 String[] f = parseCsvLine(line);
-
                 String type = f[1].trim();
                 long amount = Long.parseLong(f[2].trim());
 
@@ -110,9 +93,9 @@ public class YearComp {
     }
 
     private static String[] parseCsvLine(String line) {
-        List<String> fields = new ArrayList<>();
         StringBuilder current = new StringBuilder();
         boolean inQuotes = false;
+        java.util.List<String> fields = new java.util.ArrayList<>();
 
         for (char c : line.toCharArray()) {
             if (c == '"') {
@@ -125,16 +108,10 @@ public class YearComp {
             }
         }
         fields.add(current.toString());
-
         return fields.toArray(new String[0]);
     }
 
-    // ============================================================
-    // ΕΚΤΥΠΩΣΗ ΣΥΓΚΡΙΣΗΣ
-    // ============================================================
-
     private static void printComparisonTable(YearData y1, YearData y2) {
-
         System.out.println();
         System.out.printf("ΣΥΓΚΡΙΣΗ ΠΡΟΫΠΟΛΟΓΙΣΜΟΥ %d vs %d%n", y1.year, y2.year);
         System.out.println("------------------------------------------------------------");
@@ -143,10 +120,8 @@ public class YearComp {
 
         System.out.printf("%-25s %-15d %-15d%n",
                 "Συνολικά Έσοδα", y1.totalRevenue, y2.totalRevenue);
-
         System.out.printf("%-25s %-15d %-15d%n",
                 "Συνολικά Έξοδα", y1.totalExpenses, y2.totalExpenses);
-
         System.out.printf("%-25s %-15d %-15d%n",
                 "Ισοζύγιο", y1.balance, y2.balance);
 
