@@ -2,18 +2,13 @@ package com.obelisk;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Συγκρίνει προϋπολογισμούς Ελλάδας μεταξύ δύο ετών (2020–2025).
- * Τα δεδομένα διαβάζονται από CSV αρχεία ίδιου format.
- */
 public class YearComp {
 
     private static class YearData {
@@ -24,7 +19,6 @@ public class YearComp {
     }
 
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("==================================================");
@@ -34,28 +28,23 @@ public class YearComp {
 
         while (true) {
 
+            System.out.print("Δώστε πρώτο έτος (π.χ. 2020): ");
+            int year1 = scanner.nextInt();
+
+            System.out.print("Δώστε δεύτερο έτος (π.χ. 2025): ");
+            int year2 = scanner.nextInt();
+
             try {
-                System.out.print("Δώστε πρώτο έτος (π.χ. 2020): ");
-                int year1 = Integer.parseInt(scanner.nextLine().trim());
-
-                System.out.print("Δώστε δεύτερο έτος (π.χ. 2025): ");
-                int year2 = Integer.parseInt(scanner.nextLine().trim());
-
                 YearData y1 = loadYearData(year1);
                 YearData y2 = loadYearData(year2);
-
                 printComparisonTable(y1, y2);
-
-            } catch (NumberFormatException e) {
-                System.out.println("Λάθος είσοδος. Δώστε έτος σε αριθμούς.");
-                continue;
             } catch (IOException e) {
                 System.err.println("Σφάλμα ανάγνωσης αρχείου: " + e.getMessage());
-                continue;
             }
 
             System.out.println();
             System.out.print("Θέλετε να κάνετε άλλη σύγκριση; (ΝΑΙ/ΟΧΙ): ");
+            scanner.nextLine(); // καθαρίζει buffer
             String answer = scanner.nextLine().trim().toUpperCase();
 
             if (answer.equals("ΟΧΙ")) {
@@ -65,6 +54,8 @@ public class YearComp {
                 System.out.println("Παρακαλώ απαντήστε μόνο ΝΑΙ ή ΟΧΙ.");
             }
         }
+
+        scanner.close();
     }
 
     // ============================================================
@@ -73,13 +64,22 @@ public class YearComp {
 
     private static YearData loadYearData(int year) throws IOException {
 
-        String csvPath = "budget/budget" + year + ".csv";
-        Path path = Paths.get(csvPath);
+        String resourcePath = "budget/budget" + year + ".csv";
+
+        InputStream is = YearComp.class
+                .getClassLoader()
+                .getResourceAsStream(resourcePath);
+
+        if (is == null) {
+            throw new IOException("Δεν βρέθηκε το αρχείο: " + resourcePath);
+        }
 
         long revenue = 0L;
         long expenses = 0L;
 
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(is, StandardCharsets.UTF_8))) {
+
             String line;
             boolean first = true;
 
@@ -110,7 +110,6 @@ public class YearComp {
     }
 
     private static String[] parseCsvLine(String line) {
-
         List<String> fields = new ArrayList<>();
         StringBuilder current = new StringBuilder();
         boolean inQuotes = false;
@@ -126,6 +125,7 @@ public class YearComp {
             }
         }
         fields.add(current.toString());
+
         return fields.toArray(new String[0]);
     }
 
