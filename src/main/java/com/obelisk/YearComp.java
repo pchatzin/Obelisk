@@ -56,6 +56,7 @@ public class YearComp {
             } else {
                 System.out.println("Παρακαλώ απαντήστε μόνο ΝΑΙ ή ΟΧΙ.");
             }
+            break;
         }
     }
 
