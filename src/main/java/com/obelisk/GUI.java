@@ -112,7 +112,7 @@ public class GUI {
         return new Scene(blank, 1200, 800);
     }
 
-    private Scene createSecondScene(Stage primaryStage) {
+    public Scene createSecondScene(Stage primaryStage) {
 
     BorderPane root = new BorderPane();
     root.setStyle("-fx-background-color: #f5f8fb;");
@@ -159,24 +159,17 @@ public class GUI {
     row1.getChildren().addAll(
         createMenuButton(
             "Budget Analysis",
-             "/GUI/button1.png",
-              e -> {
-                BudgetAnalyzerPage page = new BudgetAnalyzerPage();
+            "/GUI/button1.png",
+            e -> {
+                BudgetAnalyzerPage page = new BudgetAnalyzerPage(this);
                 primaryStage.setScene(page.createScene(primaryStage));
             }
         ),
-        createMenuButton(
-             "Scenario Execution",
-              "/GUI/button4.png",
-              e -> primaryStage.setScene(createScenarioPage(primaryStage))
-            ),
-        createMenuButton(
-             "Multiple Year Operations",
-             "/GUI/button3.png",
-             e -> primaryStage.setScene(createMultiplePage(primaryStage))
-            )
-        );
-
+        createMenuButton("Scenario Execution", "/GUI/button4.png", 
+        e -> primaryStage.setScene(createScenarioPage(primaryStage))),
+        createMenuButton("Multiple Year Operations", "/GUI/button3.png", 
+        e -> primaryStage.setScene(createMultiplePage(primaryStage)))
+    );
 
     HBox row2 = new HBox(40);
     row2.setAlignment(Pos.CENTER_LEFT);
@@ -253,10 +246,11 @@ public class GUI {
     b.setAlignment(Pos.CENTER_LEFT);
     b.setPadding(new Insets(10, 20, 10, 20));
 
-    b.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #1a8080; -fx-border-color: #1a8080; -fx-border-width: 2;");
+    b.setStyle("-fx-background-color: #f5f8fb; -fx-text-fill: #1a8080; -fx-border-color: #1a8080; -fx-border-width: 2;");
 
     b.setOnAction(action);
 
     return b;
    }
  }
+ 

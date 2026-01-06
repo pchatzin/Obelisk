@@ -1,0 +1,73 @@
+@startuml
+title Obelisk Project Structure (Clean, No Duplicates)
+
+package "Obelisk Project" {
+
+  class "Obelisk/"
+  class "Test.java"
+
+  package "budget" {
+    class "budget2025.csv"
+  }
+
+  package "data" {
+    class "budgetdb.mv.db"
+  }
+
+  package "docs" {
+    class "Ex guide.docx"
+    class "KED-Odigos-Ylopoiisis-gia-Paroxous-WS_v0_90.pdf"
+    class "KED_client_specs_v1.5_0.pdf"
+    class "README.md"
+    class "exer.txt"
+    class "tech-report.md"
+  }
+
+  class "metrics.sh"
+  class "pom.xml"
+  class "promo/"
+
+  package "src" {
+
+    class "Hello.java"
+
+    package "main" {
+
+      package "java" {
+
+        package "com.obelisk" {
+
+          class "BudgetAnalyzer.java"
+          class "BudgetAnalyzerPage.java"
+          class "BudgetEntry.class"
+          class "GUI.java"
+          class "Main.java"
+          class "ObeliskApplication.java"
+          class "Scenarios.java"
+
+          package "budget_db" {
+            class "BudgetEntry.java"
+            class "BudgetEntryRepository.java"
+            class "BudgetImporter.java"
+            class "PdfBudgetParser.java"
+          }
+        }
+      }
+
+      package "resources" {
+        package "GUI" {
+          class "GUI_Guidelines.pdf"
+        }
+        class "application.properties"
+        class "budget-2025.pdf"
+        class "Κρατικός-Προϋπολογισμός-2025_ΟΕ.pdf"
+      }
+    }
+
+    package "test" {
+      class "resources/"
+    }
+  }
+}
+
+@enduml
