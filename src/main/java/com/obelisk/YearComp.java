@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -22,42 +24,44 @@ public class YearComp {
     }
 
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
-        boolean continueComparison = true;
 
         System.out.println("==================================================");
         System.out.println("ΣΥΓΚΡΙΣΗ ΠΡΟΫΠΟΛΟΓΙΣΜΩΝ ΜΕΤΑΞΥ ΕΤΩΝ");
         System.out.println("Διαθέσιμα έτη: 2020 – 2025");
         System.out.println("==================================================");
 
-        while (continueComparison) {
-
-            System.out.print("Δώστε πρώτο έτος (π.χ. 2020): ");
-            int year1 = scanner.nextInt();
-
-            System.out.print("Δώστε δεύτερο έτος (π.χ. 2025): ");
-            int year2 = scanner.nextInt();
+        while (true) {
 
             try {
+                System.out.print("Δώστε πρώτο έτος (π.χ. 2020): ");
+                int year1 = Integer.parseInt(scanner.nextLine().trim());
+
+                System.out.print("Δώστε δεύτερο έτος (π.χ. 2025): ");
+                int year2 = Integer.parseInt(scanner.nextLine().trim());
+
                 YearData y1 = loadYearData(year1);
                 YearData y2 = loadYearData(year2);
 
                 printComparisonTable(y1, y2);
 
+            } catch (NumberFormatException e) {
+                System.out.println("Λάθος είσοδος. Δώστε έτος σε αριθμούς.");
+                continue;
             } catch (IOException e) {
                 System.err.println("Σφάλμα ανάγνωσης αρχείου: " + e.getMessage());
+                continue;
             }
 
             System.out.println();
             System.out.print("Θέλετε να κάνετε άλλη σύγκριση; (ΝΑΙ/ΟΧΙ): ");
-            String answer = scanner.next().trim().toUpperCase();
+            String answer = scanner.nextLine().trim().toUpperCase();
 
-            if (answer.equals("ΝΑΙ")) {
-                continueComparison = true;
-            } else if (answer.equals("ΟΧΙ")) {
-                continueComparison = false;
+            if (answer.equals("ΟΧΙ")) {
                 System.out.println("Το πρόγραμμα τερματίζει. Ευχαριστούμε!");
-            } else {
+                break;
+            } else if (!answer.equals("ΝΑΙ")) {
                 System.out.println("Παρακαλώ απαντήστε μόνο ΝΑΙ ή ΟΧΙ.");
             }
         }
@@ -69,8 +73,8 @@ public class YearComp {
 
     private static YearData loadYearData(int year) throws IOException {
 
-        // ✅ ΣΩΣΤΟ PATH σύμφωνα με τη δομή σου
-        Path path = Paths.get("budget", "budget-" + year + ".csv");
+        String csvPath = "budget/budget" + year + ".csv";
+        Path path = Paths.get(csvPath);
 
         long revenue = 0L;
         long expenses = 0L;
@@ -81,7 +85,7 @@ public class YearComp {
 
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
-                if (first) { first = false; continue; } // skip header
+                if (first) { first = false; continue; }
 
                 String[] f = parseCsvLine(line);
 
@@ -105,14 +109,11 @@ public class YearComp {
         return data;
     }
 
-    // ============================================================
-    // CSV PARSER
-    // ============================================================
-
     private static String[] parseCsvLine(String line) {
+
+        List<String> fields = new ArrayList<>();
         StringBuilder current = new StringBuilder();
         boolean inQuotes = false;
-        java.util.List<String> fields = new java.util.ArrayList<>();
 
         for (char c : line.toCharArray()) {
             if (c == '"') {
@@ -161,7 +162,7 @@ public class YearComp {
             System.out.printf("%-25s N/A%n", label);
             return;
         }
-        double delta = ((double)(v2 - v1) / Math.abs(v1)) * 100.0;
+        double delta = ((double) (v2 - v1) / Math.abs(v1)) * 100.0;
         System.out.printf("%-25s %+.2f%%%n", label, delta);
     }
 }
