@@ -63,9 +63,7 @@ public class YearComp {
         }
     }
 
-    // ============================================================
     // ΦΟΡΤΩΣΗ ΔΕΔΟΜΕΝΩΝ ΕΤΟΥΣ
-    // ============================================================
 
     private static YearData loadYearData(int year) throws IOException {
         String csvPath = "budget/budget" + year + ".csv";
@@ -104,9 +102,6 @@ public class YearComp {
         return data;
     }
 
-    // ============================================================
-    // CSV PARSER (ίδιο pattern με BudgetAnalyzer)
-    // ============================================================
 
     private static String[] parseCsvLine(String line) {
         StringBuilder current = new StringBuilder();
