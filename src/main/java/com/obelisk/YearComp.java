@@ -63,11 +63,14 @@ public class YearComp {
         }
     }
 
+    // ============================================================
     // ΦΟΡΤΩΣΗ ΔΕΔΟΜΕΝΩΝ ΕΤΟΥΣ
+    // ============================================================
 
     private static YearData loadYearData(int year) throws IOException {
-        String csvPath = "budget/budget" + year + ".csv";
-        Path path = Paths.get(csvPath);
+
+        // ✅ ΣΩΣΤΟ PATH σύμφωνα με τη δομή σου
+        Path path = Paths.get("budget", "budget-" + year + ".csv");
 
         long revenue = 0L;
         long expenses = 0L;
@@ -78,7 +81,7 @@ public class YearComp {
 
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
-                if (first) { first = false; continue; }
+                if (first) { first = false; continue; } // skip header
 
                 String[] f = parseCsvLine(line);
 
@@ -102,6 +105,9 @@ public class YearComp {
         return data;
     }
 
+    // ============================================================
+    // CSV PARSER
+    // ============================================================
 
     private static String[] parseCsvLine(String line) {
         StringBuilder current = new StringBuilder();
@@ -127,6 +133,7 @@ public class YearComp {
     // ============================================================
 
     private static void printComparisonTable(YearData y1, YearData y2) {
+
         System.out.println();
         System.out.printf("ΣΥΓΚΡΙΣΗ ΠΡΟΫΠΟΛΟΓΙΣΜΟΥ %d vs %d%n", y1.year, y2.year);
         System.out.println("------------------------------------------------------------");
@@ -150,6 +157,10 @@ public class YearComp {
     }
 
     private static void printDelta(String label, long v1, long v2) {
+        if (v1 == 0) {
+            System.out.printf("%-25s N/A%n", label);
+            return;
+        }
         double delta = ((double)(v2 - v1) / Math.abs(v1)) * 100.0;
         System.out.printf("%-25s %+.2f%%%n", label, delta);
     }
