@@ -237,16 +237,16 @@ public class GUI {
    private Button createMenuButton(String text, String iconPath, javafx.event.EventHandler<javafx.event.ActionEvent> action) {
 
     ImageView icon = new ImageView(new Image(getClass().getResourceAsStream(iconPath)));
-    icon.setFitHeight(100);
+    icon.setFitHeight(80);
     icon.setPreserveRatio(true);
 
     Button b = new Button(text, icon);
-    b.setFont(Font.font("Arial", 36));
-    b.setPrefWidth(500);
+    b.setFont(Font.font("Arial", 28));
+    b.setPrefWidth(600);
     b.setAlignment(Pos.CENTER_LEFT);
-    b.setPadding(new Insets(10, 20, 10, 20));
+    b.setPadding(new Insets(15, 30, 15, 30));
 
-    b.setStyle("-fx-background-color: #f5f8fb; -fx-text-fill: #1a8080; -fx-border-color: #1a8080; -fx-border-width: 2;");
+    b.setStyle("-fx-background-color: #f5f8fb; -fx-text-fill: #1a8080; ");
 
     b.setOnAction(action);
 
