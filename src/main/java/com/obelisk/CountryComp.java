@@ -127,8 +127,9 @@ public class CountryComp {
                     System.out.println("Παρακαλώ απαντήστε μόνο με ΝΑΙ ή ΟΧΙ.");
                 }
             }
-
-        } catch (IOException e) {
+         } 
+         
+        catch (IOException e) {
             System.err.println("Σφάλμα κατά την ανάγνωση του αρχείου: " + e.getMessage());
         }
     }
