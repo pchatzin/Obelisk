@@ -44,19 +44,18 @@ public class YearComp {
 
             System.out.println();
             scanner.nextLine(); 
-            System.out.print("Θέλετε να κάνετε άλλη σύγκριση; (ΝΑΙ/ΟΧΙ): ");
+            System.out.print("Θέλετε να κάνετε άλλη σύγκριση; (NAI/OXI): ");
             String answer = scanner.nextLine().trim().toUpperCase();
 
 
-            if (answer.equals("ΝΑΙ")) {
+            if (answer.equals("NAI")) {
                 continueComparison = true;
-            } else if (answer.equals("ΟΧΙ")) {
+            } else if (answer.equals("OXI")) {
                 System.out.println("Το πρόγραμμα τερματίζει. Ευχαριστούμε!");
-                break; // ✅ ΤΟ ΜΟΝΟ ΠΟΥ ΧΡΕΙΑΖΟΤΑΝ
+                break;
             } else {
                 System.out.println("Παρακαλώ απαντήστε μόνο ΝΑΙ ή ΟΧΙ.");
             }
-            break;
         }
     }
 
