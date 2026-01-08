@@ -128,9 +128,8 @@ public class CountryComp {
                 }
             }
         
-        } catch (Exception e) {
-            System.err.println("Σφάλμα κατά την εκτέλεση: " + e.getMessage());
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("Σφάλμα κατά την ανάγνωση του αρχείου: " + e.getMessage());
         }
     }
 
