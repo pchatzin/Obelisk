@@ -37,12 +37,18 @@ import java.util.Set;
 public class BudgetAnalyzer {
 
     // Μοντέλο μιας γραμμής του CSV
-    private static class Entry {
+    public static class Entry {
         String type;      // "Έσοδα" ή "Έξοδα"
         long amount;      // ποσό
         String ministry;  // Υπουργείο ή "-" για έσοδα
         String source;    // πλήρης περιγραφή π.χ. "11 Φόροι"
         String code;      // κωδικός στην αρχή της source (μόνο τα ψηφία)
+
+        public String getType() { return type; }
+        public long getAmount() { return amount; }
+        public String getMinistry() { return ministry; }
+        public String getSource() { return source; }
+        public String getCode() { return code; }
     }
 
     // Για τις κατηγορίες 2-ψηφίων κωδικών (Άρθρο 1)
@@ -102,7 +108,7 @@ public class BudgetAnalyzer {
     /**
      * Φορτώνει όλες τις γραμμές του CSV σε μια λίστα Entry.
      */
-    private static List<Entry> loadEntries(String csvFile) throws IOException {
+    public static List<Entry> loadEntries(String csvFile) throws IOException {
         List<Entry> entries = new ArrayList<>();
 
         Path path = Paths.get(csvFile);
