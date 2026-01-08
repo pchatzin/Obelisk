@@ -65,7 +65,7 @@ public class CountryComp {
 
 
     public static void main(String[] args) {
-           String csvPath = "/mnt/c/Users/pinec/Desktop/Obelisk/countries/Country_comp.csv";
+           String csvPath = "src/main/resources/countries";
 
         try {
             List<CountryData> countries = loadCountries(csvPath);
