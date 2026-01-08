@@ -2,6 +2,7 @@ package com.obelisk;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,10 +59,14 @@ public class CountryComp {
     }
 
     public static void main(String[] args) {
-        String csvPath = "/mnt/c/Users/pinec/Desktop/Obelisk/countries/Country_comp.csv";
-
+        
         try {
-            List<CountryData> countries = loadCountries(csvPath);
+            List<CountryData> countries = loadCountries();
+
+            if (countries.isEmpty()) {
+                System.out.println("Σφάλμα: Δεν βρέθηκαν δεδομένα στο αρχείο CSV.");
+                return;
+            }
 
             // Greece is always row 5
             CountryData greece = countries.get(4);
