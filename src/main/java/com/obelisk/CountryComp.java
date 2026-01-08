@@ -21,7 +21,7 @@ import java.util.Scanner;
  */
 public class CountryComp {
 
-    private static class CountryData {
+    public static class CountryData {
         String country;
         double population; // in millions
         double perCapitaSpending;
@@ -128,11 +128,12 @@ public class CountryComp {
         }
     }
 
-    private static List<CountryData> loadCountries(String csvFile) throws IOException {
+    public static List<CountryData> loadCountries() {
         List<CountryData> list = new ArrayList<>();
-        Path path = Paths.get(csvFile);
 
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+            CountryComp.class.getResourceAsStream("/countries/Country_comp.csv"), StandardCharsets.UTF_8))) {
+
             String line;
             boolean first = true;
 
@@ -228,7 +229,7 @@ public class CountryComp {
         System.out.println("------------------------------------------------------------");
     }
 
-    private static String explanationForCountry(String country) {
+    public static String explanationForCountry(String country) {
     switch (country) {
         case "Ιταλία":
             return "Αιτιολόγηση σύγκρισης Ελλάδας – Ιταλίας:\n"
