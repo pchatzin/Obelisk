@@ -175,8 +175,14 @@ public class GUI {
     row2.setAlignment(Pos.CENTER_LEFT);
 
     row2.getChildren().add(
-        createMenuButton("Country Comparison", "/GUI/button2.png", 
-        e -> primaryStage.setScene(createCountryPage(primaryStage)))
+        createMenuButton(
+            "Country Comparison",
+             "/GUI/button2.png", 
+            e -> {
+                CountryCompPage page = new CountryCompPage(this);
+                primaryStage.setScene(page.createScene(primaryStage));
+            }
+        )
     );
 
     menuGrid.getChildren().addAll(row1, row2);
