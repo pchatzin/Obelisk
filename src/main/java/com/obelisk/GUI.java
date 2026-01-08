@@ -167,7 +167,7 @@ public class GUI {
         ),
         createMenuButton("Scenario Execution", "/GUI/button4.png", 
         e -> primaryStage.setScene(createScenarioPage(primaryStage))),
-        createMenuButton("Multiple Year Operations", "/GUI/button3.png", 
+        createMenuButton("Multiple Year \n Operations", "/GUI/button3.png", 
         e -> primaryStage.setScene(createMultiplePage(primaryStage)))
     );
 
