@@ -1,8 +1,8 @@
 package com.obelisk;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 
 /**
  * Compares Greece (row 5) with another selected country (rows 1–4)
@@ -20,13 +21,16 @@ import java.util.Scanner;
  * United Nations World Population Prospects.
  * NOTE: All values are speculative for 2025 as the year has not ended.
  */
+
 public class CountryComp {
 
-    public static class CountryData {
+    private static class CountryData {
+
         String country;
         double population; // in millions
         double perCapitaSpending;
         String currency;
+
 
         // Absolute amounts (million €)
         double totalRevenue;
@@ -43,6 +47,7 @@ public class CountryComp {
         double infrastructureExp;
         double investments;
 
+
         // Percentages
         double revenuePctGDP;
         double expenditurePctGDP;
@@ -58,15 +63,12 @@ public class CountryComp {
         double investmentsShare;
     }
 
-    public static void main(String[] args) {
-        
-        try {
-            List<CountryData> countries = loadCountries();
 
-            if (countries.isEmpty()) {
-                System.out.println("Σφάλμα: Δεν βρέθηκαν δεδομένα στο αρχείο CSV.");
-                return;
-            }
+    public static void main(String[] args) {
+           String csvPath = "/mnt/c/Users/pinec/Desktop/Obelisk/countries/Country_comp.csv";
+
+        try {
+            List<CountryData> countries = loadCountries(csvPath);
 
             // Greece is always row 5
             CountryData greece = countries.get(4);
@@ -84,6 +86,7 @@ public class CountryComp {
             boolean continueComparison = true;
 
             while (continueComparison) {
+
                 System.out.println("Διαθέσιμες χώρες για σύγκριση:");
                 for (int i = 0; i < 4; i++) {
                     System.out.printf("%d. %s%n", i + 1, countries.get(i).country);
@@ -127,22 +130,23 @@ public class CountryComp {
                     System.out.println("Παρακαλώ απαντήστε μόνο με ΝΑΙ ή ΟΧΙ.");
                 }
             }
-        
+
         } catch (IOException e) {
             System.err.println("Σφάλμα κατά την ανάγνωση του αρχείου: " + e.getMessage());
         }
     }
 
-    public static List<CountryData> loadCountries() {
+    public static List<CountryData> loadCountries(String csvFile) throws IOException {
+
         List<CountryData> list = new ArrayList<>();
+        Path path = Paths.get(csvFile);
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(
-            CountryComp.class.getResourceAsStream("/countries/Country_comp.csv"), StandardCharsets.UTF_8))) {
-
+        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line;
             boolean first = true;
 
             while ((line = br.readLine()) != null) {
+
                 if (line.trim().isEmpty()) continue;
                 if (first) { first = false; continue; }
 
@@ -186,6 +190,7 @@ public class CountryComp {
                 list.add(c);
             }
         }
+
         return list;
     }
 
@@ -271,6 +276,6 @@ public class CountryComp {
                  + "- Συνολικά: ΗΠΑ με μικρότερο κράτος ως % ΑΕΠ αλλά τεράστια στρατιωτική/υγειονομική δαπάνη, Ελλάδα με μεγαλύτερη κρατική παρουσία και έμφαση στην παιδεία.";
         default:
             return "Δεν υπάρχει διαθέσιμη αιτιολόγηση για αυτή τη χώρα.";
-        }
     }
+}
 }
