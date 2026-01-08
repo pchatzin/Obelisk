@@ -24,7 +24,7 @@ import java.util.Scanner;
 
 public class CountryComp {
 
-    private static class CountryData {
+    public static class CountryData {
 
         String country;
         double population; // in millions
