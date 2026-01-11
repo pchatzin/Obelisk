@@ -141,7 +141,7 @@ public class CountryComp {
         List<CountryData> list = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                CountryComp.class.getResourceAsStream("/countries/Country_comp.csv"), StandardCharsets.UTF_8))) {
+                CountryComp.class.getResourceAsStream("resources/countries/Country_comp.csv"), StandardCharsets.UTF_8))) {
             String line;
             boolean first = true;
 
