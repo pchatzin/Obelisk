@@ -17,7 +17,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import java.util.Optional;
 
-public class ScenarioPage {
+public class ScenariosPage {
 
     private GUI mainApp;
     private Scenarios logic; // Σύνδεση με τη λογική σου
