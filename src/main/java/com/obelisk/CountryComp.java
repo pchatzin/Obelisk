@@ -140,9 +140,6 @@ public class CountryComp {
                 }
             }
 
-        } catch (IOException e) {
-            System.err.println("Σφάλμα κατά την ανάγνωση του αρχείου: " + e.getMessage());
-        }
     }
 
     public static List<CountryData> loadCountries() {
@@ -150,7 +147,7 @@ public class CountryComp {
         List<CountryData> list = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                CountryComp.class.getResourceAsStream("/countries/Country_comp.csv"), 
+                CountryComp.class.getResourceAsStream("resources/countries/Country_comp.csv"), 
                 StandardCharsets.UTF_8))) {
 
             String line;
