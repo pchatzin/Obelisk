@@ -60,7 +60,7 @@ public class BudgetAnalyzer {
 
     public static void main(String[] args) {
         // Default διαδρομή αρχείου, όπως είναι στο tree σου
-        String csvPath = "budget/budget2025.csv";
+        String csvPath = "/budget/budget2025.csv";
         if (args.length > 0) {
             csvPath = args[0];
         }
