@@ -20,15 +20,14 @@ import java.util.Optional;
 public class ScenariosPage {
 
     private GUI mainApp;
-    private Scenarios logic; // Σύνδεση με τη λογική σου
+    private Scenarios logic;
     private TableView<BudgetEntry> table;
     
-    // Labels για τα αποτελέσματα
     private Label lblRevenue, lblExpenses, lblBalance, lblStatus;
 
     public ScenariosPage(GUI mainApp) {
         this.mainApp = mainApp;
-        this.logic = new Scenarios(); // Φορτώνει τα δεδομένα αυτόματα
+        this.logic = new Scenarios(); 
     }
 
     public Scene createScene(Stage stage) {
@@ -56,7 +55,7 @@ public class ScenariosPage {
 
         // --- CENTER: TABLE ---
         table = new TableView<>();
-        updateTableData(); // Γέμισμα πίνακα
+        updateTableData(); 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<BudgetEntry, String> colCode = new TableColumn<>("Code");
@@ -111,7 +110,7 @@ public class ScenariosPage {
         lblStatus = new Label();
         lblStatus.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 
-        updateSummary(); // Αρχικός υπολογισμός
+        updateSummary(); 
 
         resultsBox.getChildren().addAll(lblResTitle, new Separator(), lblRevenue, lblExpenses, lblBalance, lblStatus);
 
@@ -121,8 +120,9 @@ public class ScenariosPage {
         // --- FOOTER ---
         HBox footer = new HBox();
         footer.setPadding(new Insets(20));
-        Button backButton = new Button("Back");
-        backButton.setOnAction(e -> {
+         Button backButton = new Button("<-Back to Main Menu");
+         backButton.setStyle("-fx-font-size: 16px; -fx-background-color: #363636; -fx-text-fill: white;");
+         backButton.setOnAction(e -> {
             stage.setScene(mainApp.createSecondScene(stage));
             stage.setFullScreen(true);
         });
@@ -135,7 +135,7 @@ public class ScenariosPage {
     // --- BUTTON HANDLERS ---
 
     private void handleEdit() {
-        // Παίρνουμε την επιλεγμένη γραμμή ή ζητάμε κωδικό
+    
         BudgetEntry selected = table.getSelectionModel().getSelectedItem();
         String defaultCode = (selected != null) ? selected.code : "";
 
@@ -163,7 +163,7 @@ public class ScenariosPage {
     }
 
     private void handleAdd() {
-        // Απλοϊκός διάλογος για προσθήκη (Μπορείς να φτιάξεις Custom Dialog αν θες)
+        
         TextInputDialog d = new TextInputDialog();
         d.setTitle("Add Entry");
         d.setHeaderText("Format: Type,Ministry,Code,Desc,Amount");
