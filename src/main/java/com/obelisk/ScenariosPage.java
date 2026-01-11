@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
-public class ScenarioPage {
+public class ScenariosPage {
 
     private GUI mainApp;
     private TableView<BudgetEntry> table;
