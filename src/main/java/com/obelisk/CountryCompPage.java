@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-// Import την εσωτερική κλάση από το CountryComp
 import com.obelisk.CountryComp.CountryData;
 
 public class CountryCompPage {
@@ -35,7 +34,6 @@ public class CountryCompPage {
 
     public CountryCompPage(GUI mainApp) {
         this.mainApp = mainApp;
-        // Φόρτωση δεδομένων
         this.allCountries = CountryComp.loadCountries();
         
         // Η Ελλάδα είναι πάντα στο index 4
@@ -150,7 +148,7 @@ public class CountryCompPage {
         footer.setPadding(new Insets(20, 80, 20, 80));
         footer.setStyle("-fx-background-color: #d5dee2;");
         
-        Button backButton = new Button("Back to Main Menu");
+        Button backButton = new Button("<-Back to Main Menu");
         backButton.setStyle("-fx-font-size: 16px; -fx-background-color: #363636; -fx-text-fill: white;");
         backButton.setOnAction(e -> {
             stage.setScene(mainApp.createSecondScene(stage));
