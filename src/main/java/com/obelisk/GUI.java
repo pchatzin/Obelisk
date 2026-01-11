@@ -70,7 +70,7 @@ public class GUI {
         description.setWrapText(true);
         description.setMaxWidth(2000);
 
-        Button accessButton = new Button("Είσοδος στην εγαρμογή");
+        Button accessButton = new Button("Είσοδος στην εφαρμογή");
         accessButton.setFont(Font.font("Arial", 28));
         accessButton.setStyle("-fx-background-color: #1a8080; -fx-text-fill: #ffffff;");
         accessButton.setOnAction(e -> {
