@@ -166,7 +166,11 @@ public class GUI {
             }
         ),
         createMenuButton("Scenario Execution", "/GUI/button4.png", 
-        e -> primaryStage.setScene(createScenarioPage(primaryStage))),
+        e -> {
+                ScenariosPage page = new ScenariosPage(this);
+                primaryStage.setScene(page.createScene(primaryStage));
+            }
+        ),
         createMenuButton("Multiple Year \n Operations", "/GUI/button3.png", 
             e -> {
                 YearCompPage page = new YearCompPage(this);
