@@ -63,16 +63,14 @@ public class GUI {
         title.setTextFill(Color.web("#003476"));
 
         Label description = new Label(
-            "Το Σύστημα Παρακολούθησης & Επεξεργασίας Κρατικού Προϋπολογισμού επιτρέπει την ολοκληρωμένη πρόσβαση\n" +
-            "και ανάλυση των κυβερνητικών οικονομικών δεδομένων, διασφαλίζοντας τη διαφάνεια και τη\n" +
-            "δημοσιονομική διαχείριση βάσει δεδομένων."
+            "Το Σύστημα Παρακολούθησης & Επεξεργασίας Κρατικού Προϋπολογισμού επιτρέπει την ολοκληρωμένη πρόσβαση και ανάλυση των κυβερνητικών οικονομικών δεδομένων, διασφαλίζοντας τη διαφάνεια και τη δημοσιονομική διαχείριση βάσει δεδομένων."
         );
         description.setFont(Font.font("Arial", 32));
         description.setTextFill(Color.web("#363636"));
         description.setWrapText(true);
         description.setMaxWidth(2000);
 
-        Button accessButton = new Button("Access the application");
+        Button accessButton = new Button("Είσοδος στην εγαρμογή");
         accessButton.setFont(Font.font("Arial", 28));
         accessButton.setStyle("-fx-background-color: #1a8080; -fx-text-fill: #ffffff;");
         accessButton.setOnAction(e -> {
