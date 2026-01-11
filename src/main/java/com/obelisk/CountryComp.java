@@ -62,14 +62,22 @@ public class CountryComp {
         double defenseShare;
         double infrastructureShare;
         double investmentsShare;
+
+        @Override
+        public String toString() {
+            return country;
+        }
     }
 
 
     public static void main(String[] args) {
-           String csvPath = "src/main/resources/countries";
+        
+        List<CountryData> countries = loadCountries();
 
-        try {
-            List<CountryData> countries = loadCountries();
+        if (countries.isEmpty()) {
+            System.out.println("Δεν βρέθηκαν δεδομένα ή το αρχείο λείπει.");
+            return;
+        }
 
             // Greece is always row 5
             CountryData greece = countries.get(4);
@@ -142,7 +150,9 @@ public class CountryComp {
         List<CountryData> list = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                CountryComp.class.getResourceAsStream("resources/countries/Country_comp.csv"), StandardCharsets.UTF_8))) {
+                CountryComp.class.getResourceAsStream("/countries/Country_comp.csv"), 
+                StandardCharsets.UTF_8))) {
+
             String line;
             boolean first = true;
 
@@ -196,6 +206,10 @@ public class CountryComp {
                     System.err.println("Σφάλμα στη γραμμή δεδομένων: " + line);
                 }
             }
+            
+        } catch (Exception e) { 
+            System.err.println("Σφάλμα κατά τη φόρτωση του CSV: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return list;
