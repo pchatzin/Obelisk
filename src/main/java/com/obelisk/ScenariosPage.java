@@ -1,7 +1,6 @@
 package com.obelisk;
 
 import com.obelisk.Scenarios.BudgetEntry;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,25 +15,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
 import java.util.Optional;
 
-public class ScenariosPage {
+public class ScenarioPage {
 
     private GUI mainApp;
+    private Scenarios logic; // Σύνδεση με τη λογική σου
     private TableView<BudgetEntry> table;
-    private ObservableList<BudgetEntry> data;
     
-    // Labels για τα σύνολα
-    private Label lblTotalRev;
-    private Label lblTotalExp;
-    private Label lblBalance;
-    private Label lblStatus;
+    // Labels για τα αποτελέσματα
+    private Label lblRevenue, lblExpenses, lblBalance, lblStatus;
 
     public ScenarioPage(GUI mainApp) {
         this.mainApp = mainApp;
-        // Φόρτωση δεδομένων από τη νέα δομή του Scenarios
-        this.data = FXCollections.observableArrayList(Scenarios.loadBaseScenario());
+        this.logic = new Scenarios(); // Φορτώνει τα δεδομένα αυτόματα
     }
 
     public Scene createScene(Stage stage) {
@@ -57,74 +51,77 @@ public class ScenariosPage {
         Label pageTitle = new Label("Scenario Execution");
         pageTitle.setFont(Font.font("Arial", 36));
         pageTitle.setTextFill(Color.WHITE);
-
         header.getChildren().addAll(logoView, pageTitle);
         root.setTop(header);
 
-        // --- CENTER (TABLE) ---
+        // --- CENTER: TABLE ---
         table = new TableView<>();
-        table.setItems(data);
+        updateTableData(); // Γέμισμα πίνακα
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<BudgetEntry, String> colCode = new TableColumn<>("Code");
-        colCode.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().code));
+        colCode.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().code));
 
         TableColumn<BudgetEntry, String> colType = new TableColumn<>("Type");
-        colType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().type));
+        colType.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().type));
 
-        TableColumn<BudgetEntry, String> colMinistry = new TableColumn<>("Ministry");
-        colMinistry.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().ministry));
+        TableColumn<BudgetEntry, String> colMin = new TableColumn<>("Ministry");
+        colMin.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().ministry));
 
         TableColumn<BudgetEntry, String> colDesc = new TableColumn<>("Description");
-        colDesc.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().source));
+        colDesc.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().source));
 
         TableColumn<BudgetEntry, String> colAmount = new TableColumn<>("Amount (€)");
-        colAmount.setCellValueFactory(c -> new SimpleStringProperty(String.format("%,d", c.getValue().amount)));
+        colAmount.setCellValueFactory(d -> new SimpleStringProperty(String.format("%,d", d.getValue().amount)));
         colAmount.setStyle("-fx-alignment: CENTER-RIGHT;");
 
-        table.getColumns().addAll(colCode, colType, colMinistry, colDesc, colAmount);
-        
-        // --- RIGHT SIDEBAR (ACTIONS) ---
+        table.getColumns().addAll(colCode, colType, colMin, colDesc, colAmount);
+        root.setCenter(table);
+
+        // --- RIGHT SIDEBAR: ACTIONS & RESULTS ---
         VBox sidebar = new VBox(20);
         sidebar.setPadding(new Insets(20));
-        sidebar.setPrefWidth(250);
+        sidebar.setPrefWidth(300);
         sidebar.setStyle("-fx-background-color: #e8f0fe; -fx-border-color: #cfd8dc;");
 
         Label lblActions = new Label("Actions");
         lblActions.setFont(Font.font("Arial", FontWeight.BOLD, 18));
 
-        Button btnEdit = new Button("Edit Selected Amount");
+        Button btnEdit = new Button("Edit Amount (by Code)");
         btnEdit.setMaxWidth(Double.MAX_VALUE);
-        btnEdit.setOnAction(e -> editSelectedEntry());
+        btnEdit.setOnAction(e -> handleEdit());
 
         Button btnAdd = new Button("Add New Entry");
         btnAdd.setMaxWidth(Double.MAX_VALUE);
-        btnAdd.setOnAction(e -> addNewEntryDialog());
+        btnAdd.setOnAction(e -> handleAdd());
 
-        // Σύνολα (Live Update)
-        VBox summaryBox = new VBox(10);
-        summaryBox.setStyle("-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;");
+        Button btnTransfer = new Button("Transfer Between Ministries");
+        btnTransfer.setMaxWidth(Double.MAX_VALUE);
+        btnTransfer.setOnAction(e -> handleTransfer());
+
+        // Summary Section
+        VBox resultsBox = new VBox(10);
+        resultsBox.setStyle("-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;");
+        Label lblResTitle = new Label("Live Results");
+        lblResTitle.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         
-        lblTotalRev = new Label();
-        lblTotalExp = new Label();
+        lblRevenue = new Label();
+        lblExpenses = new Label();
         lblBalance = new Label();
         lblStatus = new Label();
-        lblBalance.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        
-        updateSummary(); // Υπολογισμός αρχικών τιμών
+        lblStatus.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 
-        summaryBox.getChildren().addAll(new Label("Summary:"), lblTotalRev, lblTotalExp, new Separator(), lblBalance, lblStatus);
+        updateSummary(); // Αρχικός υπολογισμός
 
-        sidebar.getChildren().addAll(lblActions, btnEdit, btnAdd, new Separator(), summaryBox);
+        resultsBox.getChildren().addAll(lblResTitle, new Separator(), lblRevenue, lblExpenses, lblBalance, lblStatus);
 
-        root.setCenter(table);
+        sidebar.getChildren().addAll(lblActions, btnEdit, btnAdd, btnTransfer, new Separator(), resultsBox);
         root.setRight(sidebar);
 
         // --- FOOTER ---
         HBox footer = new HBox();
-        footer.setPadding(new Insets(20, 80, 20, 80));
-        footer.setStyle("-fx-background-color: #d5dee2;");
-        Button backButton = new Button("Back to Main Menu");
+        footer.setPadding(new Insets(20));
+        Button backButton = new Button("Back");
         backButton.setOnAction(e -> {
             stage.setScene(mainApp.createSecondScene(stage));
             stage.setFullScreen(true);
@@ -135,21 +132,95 @@ public class ScenariosPage {
         return new Scene(root, 1200, 800);
     }
 
-    // --- LOGIC METHODS ---
+    // --- BUTTON HANDLERS ---
+
+    private void handleEdit() {
+        // Παίρνουμε την επιλεγμένη γραμμή ή ζητάμε κωδικό
+        BudgetEntry selected = table.getSelectionModel().getSelectedItem();
+        String defaultCode = (selected != null) ? selected.code : "";
+
+        TextInputDialog dialog = new TextInputDialog(defaultCode);
+        dialog.setTitle("Edit Entry");
+        dialog.setHeaderText("Change Amount");
+        dialog.setContentText("Enter Code:");
+        
+        Optional<String> codeRes = dialog.showAndWait();
+        if (codeRes.isPresent()) {
+            TextInputDialog amountDialog = new TextInputDialog();
+            amountDialog.setContentText("New Amount (€):");
+            amountDialog.showAndWait().ifPresent(amountStr -> {
+                try {
+                    long amount = Long.parseLong(amountStr.trim());
+                    boolean success = logic.updateEntryAmount(codeRes.get(), amount);
+                    if (success) {
+                        refreshAll();
+                    } else {
+                        showAlert("Error", "Code not found.");
+                    }
+                } catch (Exception e) { showAlert("Error", "Invalid number."); }
+            });
+        }
+    }
+
+    private void handleAdd() {
+        // Απλοϊκός διάλογος για προσθήκη (Μπορείς να φτιάξεις Custom Dialog αν θες)
+        TextInputDialog d = new TextInputDialog();
+        d.setTitle("Add Entry");
+        d.setHeaderText("Format: Type,Ministry,Code,Desc,Amount");
+        d.setContentText("e.g.: Έξοδα,Υγείας,NEW1,Νέα ΜΕΘ,50000");
+        
+        d.showAndWait().ifPresent(input -> {
+            String[] parts = input.split(",");
+            if (parts.length == 5) {
+                try {
+                    logic.addNewEntry(parts[0].trim(), parts[1].trim(), parts[2].trim(), parts[3].trim(), Long.parseLong(parts[4].trim()));
+                    refreshAll();
+                } catch (Exception e) { showAlert("Error", "Invalid Format"); }
+            } else { showAlert("Error", "Use format: Type,Ministry,Code,Desc,Amount"); }
+        });
+    }
+
+    private void handleTransfer() {
+        TextInputDialog d = new TextInputDialog();
+        d.setTitle("Transfer");
+        d.setHeaderText("Format: From,To,Desc,Amount");
+        d.setContentText("e.g.: Υγείας,Άμυνας,Εκτάκτως,10000");
+
+        d.showAndWait().ifPresent(input -> {
+            String[] parts = input.split(",");
+            if (parts.length == 4) {
+                try {
+                    logic.transferExpenses(parts[0].trim(), parts[1].trim(), parts[2].trim(), Long.parseLong(parts[3].trim()));
+                    refreshAll();
+                } catch (Exception e) { showAlert("Error", "Invalid Format"); }
+            } else { showAlert("Error", "Use format: From,To,Desc,Amount"); }
+        });
+    }
+
+    private void refreshAll() {
+        updateTableData();
+        updateSummary();
+    }
+
+    private void updateTableData() {
+        ObservableList<BudgetEntry> data = FXCollections.observableArrayList(logic.modifiedEntries);
+        table.setItems(data);
+        table.refresh();
+    }
 
     private void updateSummary() {
-        long revenue = data.stream().filter(e -> "Έσοδα".equals(e.type)).mapToLong(e -> e.amount).sum();
-        long expenses = data.stream().filter(e -> "Έξοδα".equals(e.type)).mapToLong(e -> e.amount).sum();
-        long balance = revenue - expenses;
+        long rev = logic.getTotalRevenue();
+        long exp = logic.getTotalExpenses();
+        long bal = logic.getBalance();
 
-        lblTotalRev.setText(String.format("Revenue: %,d €", revenue));
-        lblTotalExp.setText(String.format("Expenses: %,d €", expenses));
-        lblBalance.setText(String.format("Balance: %,d €", balance));
+        lblRevenue.setText(String.format("Revenue: %,d €", rev));
+        lblExpenses.setText(String.format("Expenses: %,d €", exp));
+        lblBalance.setText(String.format("Balance: %,d €", bal));
         
-        if (balance > 0) {
+        if (bal > 0) {
             lblStatus.setText("SURPLUS");
             lblStatus.setTextFill(Color.GREEN);
-        } else if (balance < 0) {
+        } else if (bal < 0) {
             lblStatus.setText("DEFICIT");
             lblStatus.setTextFill(Color.RED);
         } else {
@@ -158,64 +229,8 @@ public class ScenariosPage {
         }
     }
 
-    private void editSelectedEntry() {
-        BudgetEntry selected = table.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            showAlert("No Selection", "Please select a row to edit.");
-            return;
-        }
-
-        TextInputDialog dialog = new TextInputDialog(String.valueOf(selected.amount));
-        dialog.setTitle("Edit Amount");
-        dialog.setHeaderText("Editing: " + selected.source);
-        dialog.setContentText("New Amount (€):");
-
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(amountStr -> {
-            try {
-                long newAmount = Long.parseLong(amountStr.trim());
-                selected.setAmount(newAmount);
-                table.refresh(); // Ανανέωση πίνακα
-                updateSummary(); // Ανανέωση συνόλων
-            } catch (NumberFormatException e) {
-                showAlert("Invalid Input", "Please enter a valid number.");
-            }
-        });
-    }
-
-    private void addNewEntryDialog() {
-        // Απλοποιημένος διάλογος για προσθήκη (κανονικά θα ήθελε custom dialog)
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Add New Entry");
-        dialog.setHeaderText("Format: Type,Ministry,Description,Amount");
-        dialog.setContentText("Example: Έξοδα,Υγείας,Νέα ΜΕΘ,500000");
-
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(input -> {
-            String[] parts = input.split(",");
-            if (parts.length == 4) {
-                try {
-                    BudgetEntry entry = new BudgetEntry();
-                    entry.type = parts[0].trim();
-                    entry.ministry = parts[1].trim();
-                    entry.source = parts[2].trim();
-                    entry.amount = Long.parseLong(parts[3].trim());
-                    entry.code = "NEW";
-                    
-                    data.add(entry);
-                    updateSummary();
-                    table.scrollTo(entry);
-                } catch (Exception e) {
-                    showAlert("Error", "Invalid format or number.");
-                }
-            } else {
-                showAlert("Error", "Please use the correct format separated by commas.");
-            }
-        });
-    }
-
     private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(content);
         alert.showAndWait();
