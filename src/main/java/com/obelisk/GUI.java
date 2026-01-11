@@ -167,7 +167,7 @@ public class GUI {
         ),
         createMenuButton("Scenario Execution", "/GUI/button4.png", 
         e -> {
-                ScenarioPage page = new ScenarioPage(this);
+                ScenariosPage page = new ScenariosPage(this);
                 primaryStage.setScene(page.createScene(primaryStage));
             }
         ),
