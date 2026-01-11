@@ -1,6 +1,6 @@
 package com.obelisk;
 
-import com.obelisk.BudgetAnalyzer.Entry; // Import την εσωτερική κλάση
+import com.obelisk.BudgetAnalyzer.Entry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 public class BudgetAnalyzerPage {
 
     private GUI mainApp;
-    private ObservableList<Entry> allData; // Όλα τα δεδομένα
-    private TableView<Entry> table; // Ο πίνακας
+    private ObservableList<Entry> allData; 
+    private TableView<Entry> table; 
 
     public BudgetAnalyzerPage(GUI mainApp) {
         this.mainApp = mainApp;
@@ -32,7 +32,6 @@ public class BudgetAnalyzerPage {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #f5f8fb;");
 
-        // --- 1. HEADER (Ίδιο στυλ) ---
         HBox header = new HBox(30);
         header.setAlignment(Pos.CENTER_LEFT);
         header.setPadding(new Insets(20, 80, 20, 80));
@@ -43,7 +42,7 @@ public class BudgetAnalyzerPage {
             logoView.setImage(new Image(getClass().getResourceAsStream("/GUI/logo.png")));
             logoView.setFitHeight(100);
             logoView.setPreserveRatio(true);
-        } catch (Exception e) { /* ignore */ }
+        } catch (Exception e) { }
 
         Label pageTitle = new Label("Budget Analysis Dashboard");
         pageTitle.setFont(Font.font("Arial", 40));
@@ -52,29 +51,24 @@ public class BudgetAnalyzerPage {
         header.getChildren().addAll(logoView, pageTitle);
         root.setTop(header);
 
-        // --- ΦΟΡΤΩΣΗ ΔΕΔΟΜΕΝΩΝ ΑΠΟ ΤΗ ΛΟΓΙΚΗ (BudgetAnalyzer.java) ---
         List<Entry> rawData;
         long totalRev = 0;
         long totalExp = 0;
         
         try {
-            // Καλούμε τη μέθοδο της άλλης κλάσης
             rawData = BudgetAnalyzer.loadEntries("/budget/budget-2025.csv");
             
-            // Υπολογισμός Συνόλων για την περίληψη
             for (Entry e : rawData) {
                 if ("Έσοδα".equals(e.getType())) totalRev += e.getAmount();
                 if ("Έξοδα".equals(e.getType())) totalExp += e.getAmount();
             }
         } catch (Exception e) {
-            rawData = List.of(); // Empty list on error
+            rawData = List.of();
             System.err.println("Error loading CSV: " + e.getMessage());
         }
         
-        // Μετατροπή σε ObservableList για το JavaFX
         allData = FXCollections.observableArrayList(rawData);
 
-        // --- 2. LEFT SIDEBAR (FILTERS) ---
         VBox sidebar = new VBox(20);
         sidebar.setPadding(new Insets(30));
         sidebar.setStyle("-fx-background-color: #dbe4ea;");
@@ -90,10 +84,9 @@ public class BudgetAnalyzerPage {
         Label ministryLabel = new Label("Filter by Ministry:");
         ministryLabel.setPadding(new Insets(20, 0, 5, 0));
         
-        // ComboBox για Υπουργεία
         ComboBox<String> ministryCombo = new ComboBox<>();
         ministryCombo.setPrefWidth(200);
-        // Γεμίζουμε το ComboBox με μοναδικά ονόματα υπουργείων
+        
         ministryCombo.setItems(FXCollections.observableArrayList(
             rawData.stream()
                    .map(Entry::getMinistry)
@@ -104,7 +97,6 @@ public class BudgetAnalyzerPage {
         ));
         ministryCombo.setPromptText("Select Ministry");
 
-        // Ενέργειες Φίλτρων
         btnShowAll.setOnAction(e -> table.setItems(allData));
         
         btnRevenue.setOnAction(e -> {
@@ -128,29 +120,25 @@ public class BudgetAnalyzerPage {
         sidebar.getChildren().addAll(filterLabel, btnShowAll, btnRevenue, btnExpenses, ministryLabel, ministryCombo);
         root.setLeft(sidebar);
 
-        // --- 3. CENTER (SUMMARY + TABLE) ---
         VBox centerBox = new VBox(20);
         centerBox.setPadding(new Insets(30));
 
-        // Κάρτες Σύνοψης (Summary Cards)
         HBox summaryBox = new HBox(40);
         summaryBox.setAlignment(Pos.CENTER);
         
-        summaryBox.getChildren().add(createSummaryCard("Total Revenue", totalRev, "#1a8080")); // Green/Teal
-        summaryBox.getChildren().add(createSummaryCard("Total Expenses", totalExp, "#c0392b")); // Red
+        summaryBox.getChildren().add(createSummaryCard("Total Revenue", totalRev, "#1a8080"));
+        summaryBox.getChildren().add(createSummaryCard("Total Expenses", totalExp, "#c0392b"));
         
         long balance = totalRev - totalExp;
         String status = balance >= 0 ? "SURPLUS" : "DEFICIT";
         String color = balance >= 0 ? "#27ae60" : "#e74c3c";
         summaryBox.getChildren().add(createSummaryCard("Budget " + status, balance, color));
 
-        // Πίνακας Δεδομένων
         table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<Entry, String> typeCol = new TableColumn<>("Type");
-        typeCol.setCellValueFactory(new PropertyValueFactory<>("type")); // Καλεί το getType()
-
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         TableColumn<Entry, String> ministryCol = new TableColumn<>("Ministry");
         ministryCol.setCellValueFactory(new PropertyValueFactory<>("ministry"));
 
@@ -162,12 +150,12 @@ public class BudgetAnalyzerPage {
         amountCol.setStyle("-fx-alignment: CENTER-RIGHT;");
 
         table.getColumns().addAll(typeCol, ministryCol, sourceCol, amountCol);
-        table.setItems(allData); // Αρχικά δείχνει τα πάντα
+        table.setItems(allData);
 
         centerBox.getChildren().addAll(summaryBox, table);
         root.setCenter(centerBox);
 
-        // --- 4. FOOTER ---
+        // --- FOOTER ---
         HBox footer = new HBox();
         footer.setPadding(new Insets(20, 80, 20, 80));
         footer.setStyle("-fx-background-color: #d5dee2;");
@@ -185,7 +173,6 @@ public class BudgetAnalyzerPage {
         return new Scene(root, 1200, 800);
     }
 
-    // Βοηθητική μέθοδος για κουμπιά φίλτρων
     private Button createFilterButton(String text) {
         Button b = new Button(text);
         b.setMaxWidth(Double.MAX_VALUE);
@@ -193,7 +180,6 @@ public class BudgetAnalyzerPage {
         return b;
     }
 
-    // Βοηθητική μέθοδος για κάρτες σύνοψης
     private VBox createSummaryCard(String title, long amount, String colorHex) {
         VBox card = new VBox(10);
         card.setPadding(new Insets(20));
@@ -206,7 +192,7 @@ public class BudgetAnalyzerPage {
         titleLbl.setTextFill(Color.web("#7f8c8d"));
 
         Label amountLbl = new Label(String.format("%,d €", amount));
-        amountLbl.setFont(Font.font("Arial", 24)); // Bold
+        amountLbl.setFont(Font.font("Arial", 24)); 
         amountLbl.setStyle("-fx-font-weight: bold;");
         amountLbl.setTextFill(Color.web(colorHex));
 
