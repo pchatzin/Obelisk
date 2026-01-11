@@ -116,7 +116,7 @@ public class ScenariosPage {
         resultsBox.getChildren().addAll(lblResTitle, new Separator(), lblRevenue, lblExpenses, lblBalance, lblStatus);
 
         sidebar.getChildren().addAll(lblActions, btnEdit, btnAdd, btnTransfer, new Separator(), resultsBox);
-        root.setRight(sidebar);
+        root.setLeft(sidebar);
 
         // --- FOOTER ---
         HBox footer = new HBox();
