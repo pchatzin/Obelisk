@@ -68,7 +68,7 @@ public class CountryComp {
            String csvPath = "src/main/resources/countries";
 
         try {
-            List<CountryData> countries = loadCountries(csvPath);
+            List<CountryData> countries = loadCountries();
 
             // Greece is always row 5
             CountryData greece = countries.get(4);
@@ -136,12 +136,12 @@ public class CountryComp {
         }
     }
 
-    public static List<CountryData> loadCountries(String csvFile) throws IOException {
+    public static List<CountryData> loadCountries() {
 
         List<CountryData> list = new ArrayList<>();
-        Path path = Paths.get(csvFile);
 
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                CountryComp.class.getResourceAsStream("/countries/Country_comp.csv"), StandardCharsets.UTF_8))) {
             String line;
             boolean first = true;
 
@@ -151,11 +151,14 @@ public class CountryComp {
                 if (first) { first = false; continue; }
 
                 String[] f = line.split(",", -1);
+                if (f.length < 32) continue;
                 CountryData c = new CountryData();
-                c.country = f[1].trim();
-                c.population = Double.parseDouble(f[2].trim());
-                c.perCapitaSpending = Double.parseDouble(f[3].trim());
-                c.currency = f[4].trim();
+                
+                try {
+                    c.country = f[1].trim();
+                    c.population = Double.parseDouble(f[2].trim());
+                    c.perCapitaSpending = Double.parseDouble(f[3].trim());
+                    c.currency = f[4].trim();
 
                 // Absolute amounts 
                 c.totalRevenue = Double.parseDouble(f[5].trim());
@@ -188,6 +191,9 @@ public class CountryComp {
                 c.investmentsShare = Double.parseDouble(f[31].trim());
 
                 list.add(c);
+                } catch (NumberFormatException e) {
+                    System.err.println("Σφάλμα στη γραμμή δεδομένων: " + line);
+                }
             }
         }
 
