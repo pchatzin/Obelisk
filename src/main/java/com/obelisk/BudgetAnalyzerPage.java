@@ -59,7 +59,7 @@ public class BudgetAnalyzerPage {
         
         try {
             // Καλούμε τη μέθοδο της άλλης κλάσης
-            rawData = BudgetAnalyzer.loadEntries("budget/budget2025.csv");
+            rawData = BudgetAnalyzer.loadEntries("/budget/budget-2025.csv");
             
             // Υπολογισμός Συνόλων για την περίληψη
             for (Entry e : rawData) {
