@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class YearComp {
 
-    private static class YearData {
+    public static class YearData {
         int year;
         long totalRevenue;
         long totalExpenses;
@@ -59,7 +59,7 @@ public class YearComp {
         }
     }
 
-    private static YearData loadYearData(int year) throws IOException {
+    public static YearData loadYearData(int year) throws IOException {
         Path path = Paths.get("budget", "budget-" + year + ".csv");
 
         long revenue = 0L;
