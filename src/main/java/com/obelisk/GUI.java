@@ -63,8 +63,9 @@ public class GUI {
         title.setTextFill(Color.web("#003476"));
 
         Label description = new Label(
-            "The State Budget Monitoring & Processing System enables comprehensive access to and analysis\n" +
-            "of the government’s financial data, ensuring transparency and data-driven fiscal management."
+            "Το Σύστημα Παρακολούθησης & Επεξεργασίας Κρατικού Προϋπολογισμού επιτρέπει την ολοκληρωμένη πρόσβαση\n" +
+            "και ανάλυση των κυβερνητικών οικονομικών δεδομένων, διασφαλίζοντας τη διαφάνεια και τη\n" +
+            "δημοσιονομική διαχείριση βάσει δεδομένων."
         );
         description.setFont(Font.font("Arial", 32));
         description.setTextFill(Color.web("#363636"));
@@ -163,18 +164,21 @@ public class GUI {
             e -> {
                 BudgetAnalyzerPage page = new BudgetAnalyzerPage(this);
                 primaryStage.setScene(page.createScene(primaryStage));
+                primaryStage.setFullScreen(true);
             }
         ),
         createMenuButton("Scenario Execution", "/GUI/button4.png", 
         e -> {
                 ScenariosPage page = new ScenariosPage(this);
                 primaryStage.setScene(page.createScene(primaryStage));
+                primaryStage.setFullScreen(true);
             }
         ),
         createMenuButton("Multiple Year \n Operations", "/GUI/button3.png", 
             e -> {
                 YearCompPage page = new YearCompPage(this);
                 primaryStage.setScene(page.createScene(primaryStage));
+                primaryStage.setFullScreen(true);
             }
         )
     );
@@ -189,6 +193,7 @@ public class GUI {
             e -> {
                 CountryCompPage page = new CountryCompPage(this);
                 primaryStage.setScene(page.createScene(primaryStage));
+                primaryStage.setFullScreen(true);
             }
         )
     );
