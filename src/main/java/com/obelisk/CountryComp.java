@@ -159,7 +159,6 @@ public class CountryComp {
                 if (first) { first = false; continue; }
 
                 String[] f = line.split(",", -1);
-                if (f.length < 32) continue;
                 CountryData c = new CountryData();
                 
                 try {
