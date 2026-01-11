@@ -168,7 +168,11 @@ public class GUI {
         createMenuButton("Scenario Execution", "/GUI/button4.png", 
         e -> primaryStage.setScene(createScenarioPage(primaryStage))),
         createMenuButton("Multiple Year \n Operations", "/GUI/button3.png", 
-        e -> primaryStage.setScene(createMultiplePage(primaryStage)))
+            e -> {
+                YearCompPage page = new YearCompPage(this);
+                primaryStage.setScene(page.createScene(primaryStage));
+            }
+        )
     );
 
     HBox row2 = new HBox(40);
