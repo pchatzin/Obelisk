@@ -108,11 +108,13 @@ public class BudgetAnalyzer {
     /**
      * Φορτώνει όλες τις γραμμές του CSV σε μια λίστα Entry.
      */
-    public static List<Entry> loadEntries(String csvFile) throws IOException {
+    
+    public static List<Entry> loadEntries(String resourcePath) throws IOException {
         List<Entry> entries = new ArrayList<>();
-
-        Path path = Paths.get(csvFile);
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        
+        var stream = BudgetAnalyzer.class.getResourceAsStream(resourcePath);
+        
+       try (BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             String line;
             boolean first = true;
 
