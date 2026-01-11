@@ -60,12 +60,14 @@ public class YearComp {
     }
 
     public static YearData loadYearData(int year) throws IOException {
-        Path path = Paths.get("budget", "budget-" + year + ".csv");
-
+        
         long revenue = 0L;
         long expenses = 0L;
 
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+        String resourcePath = "/budget/budget-" + year + ".csv";
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                YearComp.class.getResourceAsStream(resourcePath), StandardCharsets.UTF_8))) {
             String line;
             boolean first = true;
 
