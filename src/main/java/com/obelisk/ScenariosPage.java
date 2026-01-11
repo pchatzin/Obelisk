@@ -26,7 +26,7 @@ public class ScenariosPage {
     // Labels για τα αποτελέσματα
     private Label lblRevenue, lblExpenses, lblBalance, lblStatus;
 
-    public ScenarioPage(GUI mainApp) {
+    public ScenariosPage(GUI mainApp) {
         this.mainApp = mainApp;
         this.logic = new Scenarios(); // Φορτώνει τα δεδομένα αυτόματα
     }
