@@ -119,7 +119,9 @@ public class ScenariosPage {
 
         // --- FOOTER ---
         HBox footer = new HBox();
-        footer.setPadding(new Insets(20));
+        footer.setPadding(new Insets(20, 80, 20, 80));
+        footer.setStyle("-fx-background-color: #d5dee2;");
+    
          Button backButton = new Button("<-Back to Main Menu");
          backButton.setStyle("-fx-font-size: 16px; -fx-background-color: #363636; -fx-text-fill: white;");
          backButton.setOnAction(e -> {
