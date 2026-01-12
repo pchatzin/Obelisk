@@ -155,6 +155,7 @@ public class CountryCompPage {
             stage.setFullScreen(true);
         });
 
+
         footer.getChildren().add(backButton);
         root.setBottom(footer);
 
