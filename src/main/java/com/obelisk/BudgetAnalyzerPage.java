@@ -15,7 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BudgetAnalyzerPage {
@@ -57,9 +59,16 @@ public class BudgetAnalyzerPage {
         
         try {
             rawData = BudgetAnalyzer.loadEntries("/budget/budget-2025.csv");
+
+            Set<String> seenRevenueCodes = new HashSet<>();
             
             for (Entry e : rawData) {
-                if ("Έσοδα".equals(e.getType())) totalRev += e.getAmount();
+                if ("Έσοδα".equals(e.getType())) {
+                    if (e.getCode() != null && e.getCode().length() == 2 && !seenRevenueCodes.contains(e.getCode())) {
+                        totalRev += e.getAmount();
+                        seenRevenueCodes.add(e.getCode());
+                    }
+                }
                 if ("Έξοδα".equals(e.getType())) totalExp += e.getAmount();
             }
         } catch (Exception e) {
