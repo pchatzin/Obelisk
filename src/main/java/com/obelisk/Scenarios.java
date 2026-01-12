@@ -98,11 +98,20 @@ public class Scenarios {
 
 
     public long getTotalRevenue() {
-        return modifiedEntries.stream()
-                .filter(e -> "Έσοδα".equals(e.type))
-                .mapToLong(e -> e.amount).sum();
-    }
+        java.util.Set<String> seenCodes = new java.util.HashSet<>();
+        long total = 0;
 
+        for (BudgetEntry e : modifiedEntries) {
+            if ("Έσοδα".equals(e.type)) {
+                if (e.code != null && e.code.length() == 2 && !seenCodes.contains(e.code)) {
+                    total += e.amount;
+                    seenCodes.add(e.code);
+                }
+            }
+        }
+        return total;
+    }
+    
     public long getTotalExpenses() {
         return modifiedEntries.stream()
                 .filter(e -> "Έξοδα".equals(e.type)) 
