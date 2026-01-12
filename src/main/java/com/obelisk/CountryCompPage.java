@@ -163,7 +163,7 @@ public class CountryCompPage {
     }
 
     private void updateComparison(CountryData other) {
-        lblSelectedCountry.setText("Greece vs " + other.country);
+        lblSelectedCountry.setText("Ελλάδα vs " + other.country);
         
         if ("ΗΠΑ".equals(other.country)) {
             lblCurrencyWarning.setText("Note: USA data is in Dollars ($). Comparisons based on % of GDP.");
