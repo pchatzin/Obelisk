@@ -244,7 +244,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ### Links
 -  GitHub Repository: https://github.com/pchatzin/Obelisk
 -  Demo Video: [demo.mp4](promo/demo.mp4)
--  UML Diagrams: uml/ directory
+-  UML Diagrams: [uml/ directory](uml/)
 
 ### Contact
 Project Link: https://github.com/pchatzin/Obelisk
