@@ -179,12 +179,13 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 ### Technical Design
 #### UML Diagram
 The application follows a layered architecture with clear separation of concerns:
+![Application Architecture](uml/master.png)
 
-
-1. Presentation Layer (GUI) - JavaFX views and controllers
-2. Business Logic Layer - Scenario execution, analysis, comparison
-3. Data Access Layer - Budget data models and repositories
-4. Import Layer - PDF/CSV parsing and data cleaning
+#### Key Architecture Layers:
+1. **Presentation Layer (GUI)** - JavaFX views and controllers
+2. **Business Logic Layer** - Scenario execution, analysis, comparison
+3. **Data Access Layer** - Budget data models and repositories
+4. **Import Layer** - PDF/CSV parsing and data cleaning
 
 ### Data Structures & Algorithms
 -  BudgetData: Main data structure storing budget entries with fields: line number, category (income/expense), amount, ministry, description
