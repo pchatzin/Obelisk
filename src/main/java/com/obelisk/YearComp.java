@@ -81,7 +81,10 @@ public class YearComp {
                 long amount = Long.parseLong(f[2].trim());
 
                 if ("Έσοδα".equals(type)) {
-                    revenue += amount;
+                    if (code.length() == 2 && !seenRevenueCodes.contains(code)) {
+                        revenue += amount;
+                        seenRevenueCodes.add(code);
+                    }
                 } else if ("Έξοδα".equals(type)) {
                     expenses += amount;
                 }
