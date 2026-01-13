@@ -97,25 +97,25 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 
 ## Project Structure
 ### Main Directories and Files
-- **Obelisk/root**
-  - `README.md` - This documentation file
-  - `pom.xml` - Maven configuration
-  - `Test.java` - Test file
-  - `metrics.sh` - Code metrics script
+- **Obelisk**
+  - `README.md`
+  - `pom.xml`
+  - `Test.java`
+  - `metrics.sh`
 
-- **data/** - Database files
-  - `budgetdb.mv.db` - H2 database
+- **data**
+  - `budgetdb.mv.db`
 
-- **docs/** - Documentation
-  - `Ex guide.docx` - Exercise guide
-  - `KED-*.pdf` - Client specifications
-  - `tech-report.md` - Technical report
+- **docs**
+  - `Ex guide.docx`
+  - `KED-*.pdf`
+  - `tech-report.md`
 
-- **promo/** - Promotional materials
-  - `demo.mp4` - Demo video
+- **promo**
+  - `demo.mp4`
 
-- **src/main/java/com/obelisk/** - Main Java source
-  - **budget_db/** - Database layer
+- **src/main/java/com/obelisk/**
+  - **budget_db**
     - `BudgetEntry.java`
     - `BudgetEntryRepository.java`
     - `BudgetImporter.java`
@@ -135,15 +135,15 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
     - `GUI.java`
     - `ObeliskApplication.java`
 
-- **resources/** - Application resources
-  - **budget/** - Budget data (2020-2025 CSV/PDF)
-  - **countries/** - International data
-  - **GUI/** - GUI assets
-  - `application.properties` - Configuration
+- **resources**
+  - **budget**
+  - **countries**
+  - **GUI**
+  - `application.properties`
 
-- **uml/** - UML diagrams
-  - `*.puml` - PlantUML source files
-  - `*.png` - Generated images
+- **uml**
+  - `*.puml`
+  - `*.png`
 
 ### Package Organization
 - **com.obelisk** - Main application package with core classes
