@@ -88,7 +88,7 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 ### Using the Application
 -  Launch the application using the command above
 -  The main GUI window will open with budget data loaded
--  Use the menu options to:
+   Use the menu options to:
 -  View budget categories and amounts
 -  Compare data across multiple years
 -  Run scenario simulations
@@ -184,7 +184,7 @@ The application follows a layered architecture with clear separation of concerns
 ### Additional Technical Documentation
 -  Code Coverage: Unit tests cover core business logic
 -  Build Status: Maven builds successfully with all dependencies resolved
--  License: Open Source (to be specified in LICENSE file)
+-  License: Open Source
 
 ### Data Sources
 -  Primary Data: Greek State Budget 2025.
