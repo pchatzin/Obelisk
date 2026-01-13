@@ -64,14 +64,14 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 
 ---
 
-## Getting Started
+## How to Build & Run
 
 ### Prerequisites
 - Java 11+
 - Maven
 - JavaFX SDK
 
-### Installation
+### Installation Steps
 1. Clone the repository:
    ```bash
    git clone https://github.com/pchatzin/Obelisk.git
@@ -84,6 +84,107 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 4. Run the application:
    ```bash
    mvn javafx:run
+
+### Using the Application
+-  Launch the application using the command above
+-  The main GUI window will open with budget data loaded
+-  Use the menu options to:
+-  View budget categories and amounts
+-  Compare data across multiple years
+-  Run scenario simulations
+-  Generate charts and visualizations
+-  Export analysis results
+
+## Project Structure
+### Main Directories and Files
+- **Obelisk/root**
+  - `README.md` - This documentation file
+  - `pom.xml` - Maven configuration
+  - `Test.java` - Test file
+  - `metrics.sh` - Code metrics script
+
+- **data/** - Database files
+  - `budgetdb.mv.db` - H2 database
+
+- **docs/** - Documentation
+  - `Ex guide.docx` - Exercise guide
+  - `KED-*.pdf` - Client specifications
+  - `tech-report.md` - Technical report
+
+- **promo/** - Promotional materials
+  - `demo.mp4` - Demo video
+
+- **src/main/java/com/obelisk/** - Main Java source
+  - **budget_db/** - Database layer
+    - `BudgetEntry.java`
+    - `BudgetEntryRepository.java`
+    - `BudgetImporter.java`
+    - `PdfBudgetParser.java`
+  - Core application classes
+    - `BudgetAnalyzer.java`
+    - `CountryComp.java`
+    - `Scenarios.java`
+    - `YearComp.java`
+  - GUI controllers
+    - `BudgetAnalyzerPage.java`
+    - `CountryCompPage.java`
+    - `ScenariosPage.java`
+    - `YearCompPage.java`
+  - Main files
+    - `Main.java`
+    - `GUI.java`
+    - `ObeliskApplication.java`
+
+- **resources/** - Application resources
+  - **budget/** - Budget data (2020-2025 CSV/PDF)
+  - **countries/** - International data
+  - **GUI/** - GUI assets
+  - `application.properties` - Configuration
+
+- **uml/** - UML diagrams
+  - `*.puml` - PlantUML source files
+  - `*.png` - Generated images
+
+### Package Organization
+- **com.obelisk** - Main application package with core classes
+- **com.obelisk.budget_db** - Database layer for budget data persistence
+- **GUI Classes** - BudgetAnalyzerPage, CountryCompPage, ScenariosPage, YearCompPage
+- **Core Logic** - BudgetAnalyzer, CountryComp, Scenarios, YearComp
+- **Entry Point** - Main.java, ObeliskApplication.java, GUI.java
+
+### Key Directories
+- **resources/budget/** - Contains CSV and PDF budget files for 2020-2025
+- **resources/countries/** - International comparison data
+- **uml/** - PlantUML diagrams and generated images
+- **docs/** - Project documentation and specifications
+- **promo/** - Promotional materials including demo video
+
+### Technical Design
+#### UML Diagram
+The application follows a layered architecture with clear separation of concerns:
+1. Presentation Layer (GUI) - JavaFX views and controllers
+2. Business Logic Layer - Scenario execution, analysis, comparison
+3. Data Access Layer - Budget data models and repositories
+4. Import Layer - PDF/CSV parsing and data cleaning
+
+### Data Structures & Algorithms
+-  BudgetData: Main data structure storing budget entries with fields: line number, category (income/expense), amount, ministry, description
+-  BudgetRepository: Central data store acting as application database
+-  ScenarioEngine: Executes what-if analyses using budget modifications
+-  ComparisonService: Handles multi-year and cross-country comparisons
+-  ChartGenerator: Creates visual representations of budget distributions
+
+### Data Flow
+1. PDF ~ CSV conversion with data cleaning
+2. CSV ~ Java objects via custom parsers
+3. Objects stored in BudgetRepository
+4. GUI interacts with repository through service classes
+5. Results displayed and exported as needed
+
+### Additional Technical Documentation
+-  Code Coverage: Unit tests cover core business logic
+-  Build Status: Maven builds successfully with all dependencies resolved
+-  License: Open Source (to be specified in LICENSE file)
 
 ### Data Sources
 -  Primary Data: Greek State Budget 2025.
