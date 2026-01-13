@@ -75,34 +75,40 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 1. Clone the repository:
    ```bash
    git clone https://github.com/pchatzin/Obelisk.git
+   ```
 2. Navigate into the folder:
    ```bash
    cd Obelisk
+   ```
 3. Build the project with maven:
    ```bash
    mvn clean install
+   ```
 4. Run the application:
    ```bash
    mvn javafx:run
+   ```
+
+---
 
 ### Using the Application
 1. Launch the Application: Run mvn javafx:run and wait for the main window to open
 2. Load Budget Data: The application automatically loads the Greek State Budget 2025
 3. Navigate the GUI:
--  Use the menu bar to switch between different views
--  Click tabs for Budget Analysis, Year Comparison, Country Comparison, and Scenarios
+  -  Use the menu bar to switch between different views
+  -  Click tabs for Budget Analysis, Year Comparison, Country Comparison, and Scenarios
 4. Analyze Data:
--  View detailed budget breakdowns by ministry and category
--  Compare budget data across years (2020-2025)
--  Benchmark against other countries' budgets
+  -  View detailed budget breakdowns by ministry and category
+  -  Compare budget data across years (2020-2025)
+  -  Benchmark against other countries' budgets
 5. Run Scenarios:
--  Modify budget items (increase/decrease percentages)
--  Simulate the impact of changes
--  Compare multiple scenarios side-by-side
+  -  Modify budget items (increase/decrease percentages)
+  -  Simulate the impact of changes
+  -  Compare multiple scenarios side-by-side
 6. Export Results:
--  Save charts as PNG images
--  Export data tables as CSV files
--  Generate PDF reports
+  -  Save charts as PNG images
+  -  Export data tables as CSV files
+  -  Generate PDF reports
 
 ## Project Structure
 ### Main Directories and Files
@@ -112,6 +118,7 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
   - `pom.xml`
   - `Test.java`
   - `metrics.sh`
+  - `LICENSE`
 
 #### Data & Documentation
 - **data**
@@ -180,12 +187,16 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 #### UML Diagram
 The application follows a layered architecture with clear separation of concerns:
 ![Application Architecture](uml/master.png)
-
-#### Key Architecture Layers:
+### Key Architecture Layers:
 1. **Presentation Layer (GUI)** - JavaFX views and controllers
 2. **Business Logic Layer** - Scenario execution, analysis, comparison
 3. **Data Access Layer** - Budget data models and repositories
 4. **Import Layer** - PDF/CSV parsing and data cleaning
+
+### Additional Design Diagrams:
+![GUI Structure](uml/GUI.png) 
+![Budget Processing](uml/budget.png)
+![Scenario Engine](uml/scenarios.png)
 
 ### Data Structures & Algorithms
 -  BudgetData: Main data structure storing budget entries with fields: line number, category (income/expense), amount, ministry, description
@@ -203,10 +214,12 @@ The application follows a layered architecture with clear separation of concerns
 
 ### Additional Technical Documentation
 #### JavaDoc Documentation
-  
+##### Testing Results 
 -  Code Coverage: Unit tests cover core business logic
 -  Build Status: Maven builds successfully with all dependencies resolved
--  License: Open Source
+##### Code Quality
+-  Static Analysis: Checkstyle configured for code standards
+-  Branch Strategy: Feature branches (GUI, analysis, budget, scenarios) with organized parallel work
 
 ### Data Sources
 -  Primary Data: Greek State Budget 2025.
@@ -217,12 +230,16 @@ The application follows a layered architecture with clear separation of concerns
 -  Unit tests for core logic (JUnit).
 -  Integration tests for GUI and data import.
 -  Pre-merge validation for each feature branch.
+-  Run tests with:
+      ```bash
+      mvn test
+      ```
 
-   ```bash
-   mvn test
+---
 
 ### License
-This project is licensed under the MIT License - see the LICENSE file for details.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ### Links
 -  GitHub Repository: https://github.com/pchatzin/Obelisk
