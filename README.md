@@ -99,7 +99,7 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 
 ### Links
 -  GitHub Repository: https://github.com/pchatzin/Obelisk
--  Demo Video: Available in /promo/demo.mp4
+-  Demo Video: demo.mp4
 
 ### Contact
 Project Link: https://github.com/pchatzin/Obelisk
