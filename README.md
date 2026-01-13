@@ -86,23 +86,34 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
    mvn javafx:run
 
 ### Using the Application
--  Launch the application using the command above
--  The main GUI window will open with budget data loaded
-   Use the menu options to:
--  View budget categories and amounts
--  Compare data across multiple years
--  Run scenario simulations
--  Generate charts and visualizations
--  Export analysis results
+1. Launch the Application: Run mvn javafx:run and wait for the main window to open
+2. Load Budget Data: The application automatically loads the Greek State Budget 2025
+3. Navigate the GUI:
+-  Use the menu bar to switch between different views
+-  Click tabs for Budget Analysis, Year Comparison, Country Comparison, and Scenarios
+4. Analyze Data:
+-  View detailed budget breakdowns by ministry and category
+-  Compare budget data across years (2020-2025)
+-  Benchmark against other countries' budgets
+5. Run Scenarios:
+-  Modify budget items (increase/decrease percentages)
+-  Simulate the impact of changes
+-  Compare multiple scenarios side-by-side
+6. Export Results:
+-  Save charts as PNG images
+-  Export data tables as CSV files
+-  Generate PDF reports
 
 ## Project Structure
 ### Main Directories and Files
+#### Root Level
 - **Obelisk**
   - `README.md`
   - `pom.xml`
   - `Test.java`
   - `metrics.sh`
 
+#### Data & Documentation
 - **data**
   - `budgetdb.mv.db`
 
@@ -114,6 +125,7 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 - **promo**
   - `demo.mp4`
 
+#### Source Code
 - **src/main/java/com/obelisk/**
   - **budget_db**
     - `BudgetEntry.java`
@@ -135,12 +147,17 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
     - `GUI.java`
     - `ObeliskApplication.java`
 
+#### Resources & Assets
 - **resources**
   - **budget**
+   - `CSV and PDF files for each year`
   - **countries**
+   - `PDF reports and CSV data for Germany, Italy, Portugal, USA`
   - **GUI**
+   - `Images, logos, and GUI guidelines`
   - `application.properties`
 
+#### Design Documentation
 - **uml**
   - `*.puml`
   - `*.png`
@@ -162,6 +179,8 @@ Obelisk is a Java based application designed for comprehensive monitoring, analy
 ### Technical Design
 #### UML Diagram
 The application follows a layered architecture with clear separation of concerns:
+
+
 1. Presentation Layer (GUI) - JavaFX views and controllers
 2. Business Logic Layer - Scenario execution, analysis, comparison
 3. Data Access Layer - Budget data models and repositories
@@ -182,6 +201,8 @@ The application follows a layered architecture with clear separation of concerns
 5. Results displayed and exported as needed
 
 ### Additional Technical Documentation
+#### JavaDoc Documentation
+  
 -  Code Coverage: Unit tests cover core business logic
 -  Build Status: Maven builds successfully with all dependencies resolved
 -  License: Open Source
@@ -195,12 +216,17 @@ The application follows a layered architecture with clear separation of concerns
 -  Unit tests for core logic (JUnit).
 -  Integration tests for GUI and data import.
 -  Pre-merge validation for each feature branch.
+
    ```bash
    mvn test
+
+### License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ### Links
 -  GitHub Repository: https://github.com/pchatzin/Obelisk
 -  Demo Video: [demo.mp4](promo/demo.mp4)
+-  UML Diagrams: uml/ directory
 
 ### Contact
 Project Link: https://github.com/pchatzin/Obelisk
